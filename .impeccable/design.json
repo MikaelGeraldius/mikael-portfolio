@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T18:31:05.087Z",
+  "title": "Design System: Mikael Geraldius Gunawan, portfolio",
+  "extensions": {
+    "colorMeta": {
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone Paper",
+        "canonical": "#ecebe7",
+        "tonalRamp": [
+          "#3a3c36",
+          "#555751",
+          "#71726c",
+          "#8c8d88",
+          "#a7a8a3",
+          "#c2c3be",
+          "#ddded9",
+          "#f9f9f5"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface Bone",
+        "canonical": "#e1dfd9",
+        "tonalRamp": [
+          "#383933",
+          "#53544e",
+          "#6f6f6a",
+          "#8a8a85",
+          "#a5a6a1",
+          "#c1c1bc",
+          "#dcdcd8",
+          "#f8f7f3"
+        ]
+      },
+      "olive": {
+        "role": "primary",
+        "displayName": "Field Olive",
+        "canonical": "#38450f",
+        "tonalRamp": [
+          "#131706",
+          "#313525",
+          "#4f5344",
+          "#6d7163",
+          "#8c8e82",
+          "#aaaca1",
+          "#c8cac0",
+          "#e7e8df"
+        ]
+      },
+      "muted-olive": {
+        "role": "secondary",
+        "displayName": "Muted Moss",
+        "canonical": "#5d683a",
+        "tonalRamp": [
+          "#1b1f10",
+          "#383c2e",
+          "#56594c",
+          "#74766a",
+          "#919489",
+          "#afb1a7",
+          "#cdcec5",
+          "#eaebe3"
+        ]
+      },
+      "bone-soft": {
+        "role": "neutral",
+        "displayName": "Lichen Soft",
+        "canonical": "#d6d8c7",
+        "tonalRamp": [
+          "#35372f",
+          "#51534b",
+          "#6c6e66",
+          "#888982",
+          "#a4a59e",
+          "#bfc0ba",
+          "#dbdbd6",
+          "#f6f7f1"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The name, set twice: opening and closing. Two lines, never wrapped."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings, large numerals, studied areas, contact links. At most two lines."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Statement paragraphs of about three lines."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text and chip labels."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Header links, map labels, footer line."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Entrances, press feedback and the hero name rise. Starts at once."
+      },
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Colour changes: header chapter tone (300ms), chip and button fills (160ms)."
+      },
+      {
+        "name": "reveal",
+        "value": "640ms, translateY(24px) + opacity, 80ms stagger, once per element",
+        "purpose": "Section entrance. Starts from a visible default if script does not run; removed under reduced motion."
+      },
+      {
+        "name": "map-camera",
+        "value": "exponential approach, rate 7/s (about 0.4s); slow sway after 4s idle",
+        "purpose": "Topic map camera and node emphasis. Snaps instantly and never drifts under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "760px"
+      },
+      {
+        "name": "stacked-focus",
+        "value": "1023px"
+      },
+      {
+        "name": "tablet",
+        "value": "700px"
+      },
+      {
+        "name": "desktop",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single action on the opening screen.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Email Mikael</a>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 32px;background:#38450f;color:#ecebe7;font:500 1.125rem/1 \"General Sans\", system-ui, sans-serif;text-decoration:none;border-radius:0;transition:transform 160ms cubic-bezier(0.23, 1, 0.32, 1),background-color 160ms cubic-bezier(0.4, 0, 0.2, 1)}.ds-btn-primary:hover{background:#5d683a}.ds-btn-primary:active{transform:scale(0.97)}.ds-btn-primary:focus-visible{outline:2px solid currentColor;outline-offset:4px}"
+    },
+    {
+      "name": "Explore Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Radio-style option for choosing what the topic map shows; the selected state inverts.",
+      "html": "<div style=\"background:#38450f;padding:16px;display:flex;gap:8px\"><span class=\"ds-chip is-on\">Overview</span><span class=\"ds-chip\">AI</span><span class=\"ds-chip\">Web design</span></div>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;background:#5d683a;color:#ecebe7;font:500 1.0625rem/1 \"General Sans\", system-ui, sans-serif;transition:background-color 160ms cubic-bezier(0.4, 0, 0.2, 1),color 160ms cubic-bezier(0.4, 0, 0.2, 1)}.ds-chip.is-on{background:#ecebe7;color:#38450f}.ds-chip:not(.is-on):hover{background:#d6d8c7;color:#38450f}"
+    },
+    {
+      "name": "Header Bar",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "A plain fixed bar that fills with the colour of the chapter beneath it.",
+      "html": "<header class=\"ds-nav\"><a href=\"#\">Mikael G.</a><nav><a href=\"#\">Education</a><a href=\"#\">Focus</a><a href=\"#\">Studied</a><a href=\"#\">Contact</a></nav></header>",
+      "css": ".ds-nav{display:flex;justify-content:space-between;align-items:center;height:56px;padding:0 24px;background:#ecebe7;color:#38450f;font:500 0.9375rem/1 \"General Sans\", system-ui, sans-serif;transition:background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),color 300ms cubic-bezier(0.4, 0, 0.2, 1)}.ds-nav nav{display:flex;gap:28px}.ds-nav a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}.ds-nav a:hover{text-decoration:underline;text-underline-offset:.3em}.ds-nav a:focus-visible{outline:2px solid currentColor;outline-offset:4px}"
+    },
+    {
+      "name": "Name Statement",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "The two-line name, used as the hero and returned at full size in the footer.",
+      "html": "<p class=\"ds-name\"><span>Mikael Geraldius</span><span>Gunawan</span></p>",
+      "css": ".ds-name{margin:0;padding:24px;background:#ecebe7;color:#38450f;font-family:Gambarino,Georgia,serif;font-size:72px;font-weight:400;letter-spacing:-0.02em;line-height:.9}.ds-name span{display:block;white-space:nowrap}"
+    },
+    {
+      "name": "Large Contact Link",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "Email and phone set at heading size on the olive field.",
+      "html": "<div class=\"ds-contact\"><a href=\"#\">ops.gege.lie@gmail.com</a></div>",
+      "css": ".ds-contact{background:#38450f;padding:24px}.ds-contact a{font-family:Gambarino,Georgia,serif;font-size:44px;letter-spacing:-0.02em;line-height:.95;color:#ecebe7;text-decoration:none}.ds-contact a:hover{text-decoration:underline;text-underline-offset:.12em}.ds-contact a:focus-visible{outline:2px solid currentColor;outline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Guide",
+    "overview": "A naturalist's plate in a book: bone paper, one olive ink, a big serif for the name, a small plain sans for everything that has to be read. The page refuses the portfolio defaults (project-card wall, stock photography, tech-dashboard glow) because Mikael has no real work to show yet, and it says so plainly. What it has instead is a name set as large as it will go, a clear statement of what he studies and wants, and one specimen plate: a low-poly relief with a network of the topics he has studied, which a visitor can turn and read.\n\nDensity is low and the type does the work. Colour arrives as whole fields, not accents: the page moves from bone to a slightly darker bone, to a full olive chapter holding the topic map, back to bone, and ends on olive again with the name returning at full size. The direction is Taste `type-only-statement` (seed 1242245214) with the palette redrawn to `olive-on-bone` for a natural look.",
+    "keyCharacteristics": [
+      "One ink (olive) for nearly all type on bone; bone type on olive fields. No second hue.",
+      "Two typefaces: Gambarino for the name and headings, General Sans for text.",
+      "Flat at rest. Depth comes from tone steps between fields, never from shadows or lines.",
+      "Square corners everywhere, including the 3D nodes' faceted silhouettes.",
+      "Motion is short, purposeful and fully optional: every piece of content is visible without it."
+    ],
+    "rules": [
+      {
+        "name": "The One Ink Rule",
+        "body": "A surface has one ink: olive on bone and surface, bone on olive. Secondary text steps in tone (Muted Moss on bone, Lichen Soft on olive) and never to grey.",
+        "section": "colors"
+      },
+      {
+        "name": "The Chapter Field Rule",
+        "body": "Colour changes happen at section edges, by whole field. The fixed header takes the colour of the chapter under its midline (300ms), and nothing ever sits half on one field and half on another.",
+        "section": "colors"
+      },
+      {
+        "name": "The Five Sizes Rule",
+        "body": "Five sizes carry the page and no more. A new element takes one of them.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "**Do** set the name as large as two lines allow, in Gambarino, in the one ink.",
+      "**Do** change colour by whole chapter (bone, surface, olive) and let the header follow it.",
+      "**Do** keep every control a real, keyboard-operable element with a visible focus ring and a 44px target.",
+      "**Do** keep content visible without motion: entrances start from a visible default, and reduced motion removes travel and drift.",
+      "**Do** keep the 3D scene below the opening, lazy, DPR-capped, paused off-screen, and backed by the plain topic list."
+    ],
+    "donts": [
+      "**Don't** add project cards, placeholder work, stock photos or invented proof until Mikael has real work and real images (with provenance) to show.",
+      "**Don't** add eyebrows, index numbers, hairline rules, gradients, shadows, glass, monospace, icon-topped cards or a styled accent word.",
+      "**Don't** introduce a third typeface, a second hue, or a sixth type size.",
+      "**Don't** make the 3D map carry information the page does not also state in text.",
+      "**Don't** publish the contact details or the font files without the checks in `README.md` and `FONTS.md`."
+    ]
+  }
+}

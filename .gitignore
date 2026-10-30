@@ -1,0 +1,15 @@
+node_modules
+dist
+*.local
+.vite
+.headroom-cache
+.taste-skill/inspect
+
+# Font files: the ITF Free Font License forbids sharing them through a repository.
+# scripts/fetch-fonts.mjs downloads them from Fontshare before each build (see FONTS.md).
+public/fonts/*.woff2
+
+# Local working files: agent skills and briefs, inspection reports and screenshots.
+.claude/
+.taste-skill/
+screenshots/

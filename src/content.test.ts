@@ -1,0 +1,48 @@
+import { describe, expect, it } from 'vitest'
+import { contact, facts, groups, mailtoHref, nodesForGroup, person, studied, topicNodes } from './content'
+
+describe('confirmed facts', () => {
+  it('keeps the user-approved identity and timeline', () => {
+    expect(person.name).toBe('Mikael Geraldius Gunawan')
+    expect(`${person.firstLine} ${person.secondLine}`).toBe(person.name)
+    expect(person.university).toBe('Universitas Multimedia Nusantara')
+    expect(facts.map((f) => f.value)).toEqual(['2024', '5', '2028'])
+  })
+
+  it('links the requested email and publishes no phone number', () => {
+    expect(mailtoHref.startsWith('mailto:ops.gege.lie@gmail.com?subject=')).toBe(true)
+    expect(Object.keys(contact)).toEqual(['email', 'emailSubject'])
+  })
+
+  it('lists every studied area and AI assistant from the brief', () => {
+    const text = studied.map((s) => `${s.area} ${s.topics}`).join(' ')
+    for (const word of ['HTML', 'JavaScript', 'TypeScript', 'React', 'Tailwind', 'MySQL', 'PostgreSQL', 'ExpressJS', 'Kotlin', 'Room', 'Python', 'Unity', 'C#', 'Claude', 'ChatGPT', 'Gemini', 'Hermes']) {
+      expect(text).toContain(word)
+    }
+  })
+
+  it('invents no projects, employers or profiles', () => {
+    const all = JSON.stringify({ studied, topicNodes, groups })
+    expect(all).not.toMatch(/project|intern at|certificate|github\.com|linkedin/i)
+  })
+})
+
+describe('topic map data', () => {
+  it('has unique ids and parents that exist', () => {
+    const ids = topicNodes.map((n) => n.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const node of topicNodes) if (node.parent) expect(ids).toContain(node.parent)
+  })
+
+  it('lists the nodes of each group for the accessible list', () => {
+    expect(nodesForGroup('all').map((n) => n.id)).toEqual(['informatics', 'ai', 'web', 'backend', 'mobile', 'game'])
+    expect(nodesForGroup('ai').map((n) => n.id)).toEqual(['ai', 'ml', 'claude', 'chatgpt', 'gemini', 'hermes'])
+    expect(nodesForGroup('web').map((n) => n.id)).toEqual(['web', 'html', 'js', 'ts', 'react', 'tailwind'])
+    expect(nodesForGroup('other')).toHaveLength(3)
+  })
+
+  it('describes each exploration group', () => {
+    expect(groups.map((g) => g.id)).toEqual(['all', 'ai', 'web', 'other'])
+    for (const g of groups) expect(g.summary.length).toBeGreaterThan(20)
+  })
+})

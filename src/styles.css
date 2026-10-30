@@ -1,0 +1,834 @@
+/* Fonts: self-hosted, unmodified files from Fontshare (ITF Free Font License). See FONTS.md. */
+@font-face {
+  font-family: 'Gambarino';
+  src: url('/fonts/Gambarino-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/GeneralSans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Three chapter fields, one step apart. Surfaces separate by tone, never by line or shadow. */
+  --ground: #0e1115;
+  --raised: #151a21;
+  --deep: #090b0e;
+
+  --ink: #eef1f5; /* running text on every field */
+  --ink-2: #a7b1be; /* supporting text: 8.9:1 on ground, 8.2:1 on raised */
+  --accent: #ff6b3d; /* the action, and the two focus areas */
+  --accent-ink: #0e1115; /* 6.7:1 on the accent */
+
+  --display: 'Gambarino', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --text: 'General Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /*
+   * Type. Five sizes, each clearly apart from its neighbours, and six roles built from them:
+   *   display    the name                         Gambarino  --t-display
+   *   heading    one per section (h2)             Gambarino  --t-head
+   *   subhead    items inside a section (h3)      Gambarino  --t-lead
+   *   lead       the statement under a heading    General    --t-lead
+   *   body       running text, controls           General    --t-body
+   *   small      notes, captions, nav, legal      General    --t-small, supporting ink
+   * Gambarino sets headings only; General Sans sets everything that is read or pressed.
+   */
+  --t-display: 13vw;
+  --t-head: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  --t-lead: clamp(1.375rem, 1.1rem + 1vw, 2rem);
+  --t-body: clamp(1.0625rem, 1rem + 0.25vw, 1.25rem);
+  --t-small: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+
+  /* Leading per role: tight for display, opening up as the size comes down. */
+  --lh-display: 0.9;
+  --lh-head: 0.98;
+  --lh-sub: 1.15;
+  --lh-lead: 1.4;
+  --lh-body: 1.6;
+  --lh-small: 1.5;
+
+  /* Line lengths: statements stay short, running text stays readable. */
+  --measure-lead: 30ch;
+  --measure-body: 60ch;
+
+  /* Spacing between the parts of a section, so every section groups the same way:
+     a heading and its intro sit close as one unit; the content starts well below that unit. */
+  --intro-gap: 28px;
+  --head-gap: clamp(56px, 7vw, 104px);
+
+  --margin: clamp(16px, 3vw, 40px);
+  --gap: clamp(16px, 2vw, 28px);
+  --chapter: clamp(96px, 13vw, 200px);
+  --header: 56px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 1100px) {
+  :root {
+    --t-display: 12vw;
+  }
+}
+@media (min-width: 1800px) {
+  :root {
+    --t-display: 13.5rem;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: #3b4556 var(--ground);
+  /* Anchored chapters stop with their top edge on the header's midline, where the header takes their tone. */
+  scroll-padding-top: calc(var(--header) / 2);
+}
+/* No CSS smooth scrolling: in-page links are animated by useSmoothAnchors (src/hooks.ts), which the visitor can
+   interrupt and which skips itself under reduced motion. Without script a link is the browser's plain jump. */
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: var(--t-body);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  font-kerning: normal;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+dl,
+dd,
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  color: inherit;
+}
+button {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+/* A section that anchor navigation moved focus to is a reading position, not a control. */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 30;
+  padding: 12px 18px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 500;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: none;
+  outline-offset: 2px;
+}
+
+/* Type roles (see the scale in :root). Tracking tightens as the size grows. */
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  hyphens: none;
+  text-wrap: balance;
+}
+h2 {
+  font-size: var(--t-head);
+  letter-spacing: -0.02em;
+  line-height: var(--lh-head);
+}
+h3 {
+  font-size: var(--t-lead);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-sub);
+}
+p {
+  text-wrap: pretty;
+}
+.lead {
+  max-width: var(--measure-lead);
+  font-size: var(--t-lead);
+  line-height: var(--lh-lead);
+  letter-spacing: -0.005em;
+}
+.body {
+  max-width: var(--measure-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+}
+.small {
+  max-width: var(--measure-body);
+  color: var(--ink-2);
+  font-size: var(--t-small);
+  line-height: var(--lh-small);
+}
+/* Every section opens the same way: the heading, then its intro directly beneath. */
+.section-head {
+  display: grid;
+  gap: var(--intro-gap);
+  align-content: start;
+}
+
+/* Emphasis is foreground only: the two focus areas take the accent colour and a medium weight. */
+.mark {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Header: a plain bar that takes the field of the chapter beneath it */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  height: var(--header);
+  padding-inline: var(--margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--ground);
+  color: var(--ink);
+  font-size: var(--t-small);
+  font-weight: 500;
+  transition: background-color 300ms var(--ease);
+}
+.site-header[data-header-tone='raised'] {
+  background: var(--raised);
+}
+.site-header[data-header-tone='deep'] {
+  background: var(--deep);
+}
+.site-header ul {
+  display: flex;
+  gap: clamp(10px, 2.6vw, 36px);
+}
+.site-header a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-header a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+}
+/* The section being read: the same accent underline the picker uses for its current choice. */
+.site-header a[aria-current] {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+/* Buttons and links */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0 32px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--t-body);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0;
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 160ms var(--ease);
+}
+.button:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background: var(--ink);
+  }
+}
+
+/* The name: plain display type on two lines, used large in the hero and again in the footer */
+.name {
+  font-family: var(--display);
+  font-size: var(--t-display);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: var(--lh-display);
+}
+/* Each line is a mask the type rises through on load; the padding keeps ascenders and descenders unclipped. */
+.name-line {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.12em;
+  margin-top: -0.12em;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.name-line-inner {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Hero: the name, one sentence, one action */
+.hero {
+  min-height: min(100svh, 780px);
+  display: flex;
+  flex-direction: column;
+  /* The sentence that says what this is sits directly under the name. */
+  gap: clamp(32px, 6vh, 56px);
+  padding: calc(var(--header) + clamp(32px, 9vh, 96px)) var(--margin) clamp(48px, 9vh, 96px);
+  background: var(--ground);
+  overflow: clip;
+}
+.hero-foot {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  row-gap: 28px;
+  align-items: end;
+}
+.hero-sentence {
+  grid-column: 1 / 9;
+  max-width: 34ch;
+  text-wrap: balance;
+}
+.hero .button {
+  grid-column: 10 / 13;
+  justify-self: end;
+}
+
+/* Education: a raised field, heading left, statement right, three facts */
+.education {
+  padding: var(--chapter) var(--margin);
+  background: var(--raised);
+}
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  row-gap: var(--head-gap);
+}
+.education .section-head {
+  grid-column: 1 / 7;
+}
+.facts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: var(--gap);
+}
+.fact dt {
+  font-family: var(--display);
+  font-size: var(--t-head);
+  letter-spacing: -0.02em;
+  line-height: var(--lh-head);
+  font-variant-numeric: lining-nums;
+}
+.fact dd {
+  margin-top: 12px;
+}
+
+/* Focus: the deepest field, with the one live thing */
+.focus {
+  padding: var(--chapter) var(--margin);
+  background: var(--deep);
+}
+.focus-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  row-gap: 32px;
+  grid-template-rows: auto auto 1fr;
+  align-items: start;
+}
+.focus-head {
+  grid-column: 1 / 6;
+  grid-row: 1;
+}
+.picker {
+  grid-column: 1 / 6;
+  grid-row: 2;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+.picker label {
+  position: relative;
+}
+.picker input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+/* Controls are type, not tiles: the chosen one is full ink with an accent underline, the others the supporting ink. */
+.picker span,
+.topic-list button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  color: var(--ink-2);
+  font-size: var(--t-body);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.4em;
+  transition:
+    color 160ms var(--ease),
+    text-decoration-color 160ms var(--ease),
+    transform 160ms var(--ease-out);
+}
+.picker input:checked + span,
+.topic-list button[aria-pressed='true'] {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+.picker label:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.picker label:active span,
+.topic-list button:active {
+  transform: scale(0.97);
+}
+.focus-detail {
+  grid-column: 1 / 6;
+  grid-row: 3;
+  display: grid;
+  gap: 32px;
+}
+/* The topic list sits under its own label, so it reads as content to open, not as more tabs. */
+.topics {
+  display: grid;
+  gap: 4px;
+}
+.readout {
+  min-height: 6.5em;
+  max-width: 40ch;
+}
+.readout strong {
+  font-weight: 500;
+}
+.topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+}
+/* Regular weight against the picker's medium: tabs choose the view, topics open a detail. */
+.topic-list button {
+  border: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .picker input:not(:checked):hover + span,
+  .topic-list button[aria-pressed='false']:hover {
+    color: var(--ink);
+  }
+}
+
+.focus-stage {
+  grid-column: 6 / 13;
+  grid-row: 1 / 4;
+  align-self: stretch;
+  min-height: clamp(560px, 82vh, 840px);
+  display: grid;
+}
+.scene-loading {
+  background: var(--raised);
+}
+.scene-fallback {
+  align-self: center;
+  max-width: var(--measure-lead);
+  font-size: var(--t-lead);
+  line-height: var(--lh-lead);
+}
+
+.topic-map {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: inherit;
+}
+.topic-map:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 6px;
+}
+.topic-map-stage {
+  position: relative;
+  min-height: 0;
+}
+.topic-map-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.topic-map-canvas:active {
+  cursor: grabbing;
+}
+.topic-map-labels {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(100% - 3.2em);
+  overflow: hidden;
+  pointer-events: none;
+}
+.topic-map-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--ink);
+  font-size: var(--t-small);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  /* Knocks the field colour out behind the letters so edges and nodes never cut through them. */
+  paint-order: stroke fill;
+  -webkit-text-stroke: 4px var(--deep);
+  transition: opacity 200ms var(--ease);
+}
+.topic-map-label[data-kind='hub'],
+.topic-map-label[data-kind='root'] {
+  font-size: 1.125rem;
+}
+.topic-map-label.is-dim {
+  color: var(--ink-2);
+}
+.topic-map-label.is-selected {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+.topic-map-label.is-hidden {
+  opacity: 0;
+}
+.topic-map-hint {
+  padding-top: 12px;
+}
+
+/* Studied: the full list, one area per line with its topics beside it */
+.studied {
+  padding: var(--chapter) var(--margin);
+  background: var(--ground);
+}
+.studied h2 {
+  margin-bottom: var(--head-gap);
+}
+.studied-list {
+  display: grid;
+  gap: clamp(28px, 3.4vw, 48px);
+}
+.studied-row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  align-items: baseline;
+}
+.studied-area {
+  grid-column: 1 / 6;
+}
+.studied-topics {
+  grid-column: 6 / 13;
+}
+/* A footnote to the list: one row's gap below it, so it reads as part of the list, not a new block. */
+.studied-note {
+  margin-top: clamp(28px, 3.4vw, 48px);
+  margin-left: calc((100% + var(--gap)) * 5 / 12);
+}
+
+/* Contact and footer: the raised field. Heading and statement on the left, the two ways in on the right. */
+.contact {
+  padding: var(--chapter) var(--margin) clamp(96px, 10vw, 160px);
+  background: var(--raised);
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  row-gap: var(--head-gap);
+  align-items: end;
+}
+.contact-head {
+  grid-column: 1 / 7;
+}
+.contact-methods {
+  grid-column: 8 / 13;
+  display: grid;
+  gap: clamp(28px, 3vw, 40px);
+}
+.contact-method dt {
+  margin-bottom: 4px;
+}
+.contact-method dd {
+  margin: 0;
+}
+/* Each way in is a subhead-sized link: clearly the thing to press, never louder than the section heading. */
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--display);
+  font-size: var(--t-lead);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-sub);
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+  transition: color 160ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover {
+    color: var(--accent);
+  }
+}
+
+/* Footer: one quiet line on the same field, after the contact. */
+.site-footer {
+  padding: 0 var(--margin) clamp(20px, 3vw, 36px);
+  background: var(--raised);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px var(--gap);
+}
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--t-small);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Without script there is no map to turn: the readout and topic list carry the content. */
+html:not(.js) .focus-stage,
+html:not(.js) .picker {
+  display: none;
+}
+html:not(.js) .focus-detail {
+  grid-column: 1 / -1;
+}
+
+/*
+ * Motion. The base state above is the finished page; everything below only adds entrances, and only when
+ * motion is welcome. Transform and opacity only.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Opening: only the name moves. Its two lines rise a short way through their masks, already readable on the
+     first frame; the sentence and the button are in place from the start. */
+  .hero .name-line-inner {
+    animation: rise 700ms var(--ease-expo) both;
+  }
+  .hero .name-line + .name-line .name-line-inner {
+    animation-delay: 90ms;
+  }
+  /* As the page scrolls the name leaves a little faster than the page, away from the sentence beneath it.
+     Browsers without scroll timelines skip this. */
+  @supports (animation-timeline: scroll()) {
+    .hero .name {
+      animation: drift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 90vh;
+    }
+  }
+
+  /* Scroll entrances, below the fold only: each heading, paragraph, group and button rises 24px and fades in
+     once as it enters. --d is set by the script only for elements that enter in the same frame (a list, a row
+     of facts), 70ms apart in reading order. The hidden state exists only while script runs (html.js). */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(48px) scale(0.985);
+    transition:
+      opacity 900ms var(--ease-out) var(--d, 0ms),
+      transform 1200ms var(--ease-expo) var(--d, 0ms);
+  }
+  .js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  /* The sentence and button follow the name up, a beat behind it. */
+  .hero-foot > * {
+    animation: fade-up 1000ms var(--ease-expo) 260ms both;
+  }
+  .hero-foot > * + * {
+    animation-delay: 380ms;
+  }
+}
+/* Reduced motion: nothing travels, but content still fades in rather than snapping on. */
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 0;
+    transition: opacity 700ms var(--ease) var(--d, 0ms);
+  }
+  .js .reveal.is-in {
+    opacity: 1;
+  }
+}
+/* If the app never starts, nothing stays hidden. */
+.reveal-fallback .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@keyframes rise {
+  from {
+    transform: translateY(32%);
+  }
+}
+@keyframes drift {
+  to {
+    transform: translateY(-9vh);
+  }
+}
+
+/* Tablet and phone: its own composition, not a shrunk desktop */
+@media (max-width: 1023px) {
+  .hero {
+    min-height: min(100svh, 720px);
+  }
+  .hero-sentence {
+    grid-column: 1 / -1;
+  }
+  .hero .button {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .focus-head,
+  .picker,
+  .focus-detail {
+    grid-column: 1 / -1;
+  }
+  .focus-head {
+    grid-row: 1;
+  }
+  .picker {
+    grid-row: 2;
+  }
+  .focus-stage {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-height: clamp(520px, 82vw, 700px);
+  }
+  .focus-detail {
+    grid-row: 4;
+  }
+}
+
+@media (max-width: 760px) {
+  .education-grid,
+  .contact {
+    grid-template-columns: 1fr;
+  }
+  .education .section-head,
+  .contact-head,
+  .contact-methods {
+    grid-column: 1;
+  }
+  .facts {
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+  }
+  .studied-row {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+  .studied-area,
+  .studied-topics {
+    grid-column: 1;
+  }
+  .studied-note {
+    margin-left: 0;
+  }
+  .hero {
+    min-height: 0;
+  }
+  .hero .button {
+    width: 100%;
+    justify-self: stretch;
+  }
+  .focus-stage {
+    min-height: 540px;
+  }
+}
