@@ -2,7 +2,8 @@
 
 A one-page, type-led portfolio for internship and job applications in AI and web design. React + TypeScript +
 Vite, custom CSS, and one lazy-loaded Three.js topic map. Static only: no backend, database, secrets or external
-API calls. Status: **built and verified locally; not published.**
+API calls. Status: **live at https://mikaelgeraldius.github.io/mikael-portfolio/**; a push to `main` deploys it.
+Working rules for agents are in `CLAUDE.md`.
 
 ## Run it
 
