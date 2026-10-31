@@ -65,6 +65,8 @@ export interface Project {
   learned: string[]
   stack: string
   repo: string
+  shots: { src: string; alt: string }[]
+  shotsCaption: string
 }
 
 // Built Oct 2026; code public at the repo below. The music itself is Mikael's own
@@ -87,6 +89,12 @@ export const projects: Project[] = [
     ],
     stack: 'TypeScript, React Native, Expo, expo-audio, expo-location, OpenStreetMap, Python, numpy, ffmpeg',
     repo: 'https://github.com/MikaelGeraldius/RegionMusic',
+    // Captured from the app on Mikael's phone in its demo mode, so no real location history shows.
+    shots: [
+      { src: `${import.meta.env.BASE_URL}projects/regionmusic-playing.webp`, alt: 'RegionMusic playing a city theme at Summarecon Mall Serpong, with today’s tally and the journey list' },
+      { src: `${import.meta.env.BASE_URL}projects/regionmusic-off.webp`, alt: 'RegionMusic with the music off and the pink Start music button' },
+    ],
+    shotsCaption: 'Screens from the app on my phone, shown with sample places.',
   },
 ]
 

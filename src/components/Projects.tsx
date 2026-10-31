@@ -19,6 +19,12 @@ export default function Projects() {
           <p className="lead project-summary reveal" data-reveal>
             {project.summary}
           </p>
+          <figure className="project-shots reveal" data-reveal>
+            {project.shots.map((shot) => (
+              <img key={shot.src} src={shot.src} alt={shot.alt} width={540} height={1145} loading="lazy" decoding="async" />
+            ))}
+            <figcaption className="small">{project.shotsCaption}</figcaption>
+          </figure>
           <dl className="project-details">
             <div className="studied-row reveal" data-reveal>
               <dt className="project-label">What it does</dt>

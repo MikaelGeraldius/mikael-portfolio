@@ -611,6 +611,20 @@ p {
 .project-summary {
   max-width: 34ch;
 }
+.project-shots {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 280px));
+  gap: var(--gap);
+}
+.project-shots img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.project-shots figcaption {
+  grid-column: 1 / -1;
+}
 .project-details {
   display: grid;
   gap: clamp(28px, 3.4vw, 48px);
