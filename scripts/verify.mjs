@@ -123,7 +123,8 @@ async function fullDesktopChecks(browser) {
   })
   check('3D canvas mounted below the opening and sized', !!canvasState && canvasState.w > 300 && canvasState.h > 300, JSON.stringify(canvasState))
   const labelCount = await page.eval(() => document.querySelectorAll('.topic-map-label:not(.is-hidden)').length)
-  check('overview shows 6 labels', labelCount === 6, String(labelCount))
+  // The degree, the two focus areas and the five other studies.
+  check('overview shows 8 labels', labelCount === 8, String(labelCount))
   await sectionShot(page, '#focus', 'desktop-focus-overview.jpg')
 
   // Radio group via keyboard
@@ -187,14 +188,19 @@ async function fullDesktopChecks(browser) {
     const r = el.getBoundingClientRect()
     return { x: r.x + r.width / 2, y: r.y }
   })
-  const tap = { x: hubLabel.x, y: hubLabel.y - 26 }
-  await page.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: tap.x, y: tap.y, button: 'left', clickCount: 1 })
-  await page.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: tap.x, y: tap.y, button: 'left', clickCount: 1 })
-  await sleep(900)
-  const hubPick = await page.eval(() => ({
-    group: document.querySelector('.picker input:checked').value,
-    readout: document.querySelector('.readout').textContent,
-  }))
+  // The hub's label is its ring's caption, some way under the hub: step up from it until a click lands on the hub.
+  let hubPick = { group: 'all', readout: '' }
+  for (let lift = 30; lift <= 220 && hubPick.group !== 'web'; lift += 15) {
+    const tap = { x: hubLabel.x, y: hubLabel.y - lift }
+    await page.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: tap.x, y: tap.y, button: 'left', clickCount: 1 })
+    await page.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: tap.x, y: tap.y, button: 'left', clickCount: 1 })
+    await sleep(500)
+    hubPick = await page.eval(() => ({
+      group: document.querySelector('.picker input:checked').value,
+      readout: document.querySelector('.readout').textContent,
+    }))
+  }
+  await sleep(500)
   check('clicking the Web design hub in 3D selects it and zooms the group', hubPick.group === 'web' && /^Web design\./.test(hubPick.readout), JSON.stringify(hubPick))
   await sectionShot(page, '#focus', 'desktop-focus-web.jpg')
 
@@ -247,7 +253,7 @@ async function touchChecks(browser) {
   const stage = await rectOf(page, '.topic-map-stage')
   check('phone: canvas present and fits viewport width', !!stage && stage.w <= 390 && stage.h > 250, JSON.stringify(stage))
   const labels = await page.eval(() => document.querySelectorAll('.topic-map-label:not(.is-hidden)').length)
-  check('phone: overview labels visible', labels === 6, String(labels))
+  check('phone: overview labels visible', labels === 8, String(labels))
 
   const touch = (type, x, y) => page.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y }] })
   const cx = stage.x + stage.w / 2
@@ -370,10 +376,10 @@ async function fallbackChecks() {
         buttons: document.querySelectorAll('.topic-list button').length,
       }))
       check('fallback: no canvas, plain message shown', !f.canvas && /not available/.test(f.message), f.message.slice(0, 60))
-      check('fallback: topic list still present', f.buttons === 6, String(f.buttons))
+      check('fallback: topic list still present', f.buttons === 8, String(f.buttons))
       await page.eval(() => document.querySelector('.picker input[value="web"]').click())
       await sleep(300)
-      check('fallback: list + readout still work', await page.eval(() => document.querySelectorAll('.topic-list button').length === 6 && /frontend/i.test(document.querySelector('.readout').textContent)))
+      check('fallback: list + readout still work', await page.eval(() => document.querySelectorAll('.topic-list button').length === 8 && /frontend/i.test(document.querySelector('.readout').textContent)))
       await sectionShot(page, '#focus', 'desktop-focus-no-webgl.jpg')
       check('fallback: no page exceptions', page.consoleErrors.length === 0, page.consoleErrors.join(' | '))
     }

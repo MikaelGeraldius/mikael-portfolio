@@ -20,27 +20,39 @@ export interface CameraFocus {
   halfHeight: number
 }
 
-// A top-down tree: the degree on top, the two focus areas below it with their
-// topics on a ring, and the other studies along the bottom.
+// The degree in the middle, the two focus areas below it on either side with their topics on a ring, and
+// the other studies fanned in an arc above the degree, so no edge has to cross a cluster.
 const hubPosition: Record<string, Vec3> = {
-  informatics: [0, 2.3, -0.8],
-  ai: [-2.8, 0.45, 0],
-  web: [2.8, 0.45, 0],
+  informatics: [0, 1.2, -0.6],
+  ai: [-3.0, -0.6, 0],
+  web: [3.0, -0.6, 0],
 }
 
-const otherPosition: Record<string, Vec3> = {
-  backend: [-2.4, -2.0, 0.9],
-  mobile: [0, -2.95, 1.3],
-  game: [2.4, -2.0, 0.9],
+const ARC_RADIUS = 2.4
+
+// Degrees around the degree node, left to right, with a little depth so the arc reads in 3D.
+const otherArc: Record<string, [number, number]> = {
+  backend: [160, 0.3],
+  audio: [125, -0.1],
+  mobile: [90, -0.4],
+  location: [55, -0.1],
+  game: [20, 0.3],
 }
 
-const RING_RADIUS = 1.8
+function onArc(id: string): Vec3 {
+  const [degrees, z] = otherArc[id]
+  const angle = (degrees * Math.PI) / 180
+  const root = hubPosition.informatics
+  return [root[0] + Math.cos(angle) * ARC_RADIUS, root[1] + Math.sin(angle) * ARC_RADIUS, z]
+}
 
-// Angles (degrees) around each hub. The bottom stays open for the hub's label and
-// the direction of the edge back to the degree is left clear.
+const RING_RADIUS = 1.95
+
+// Angles (degrees) around each hub, in the order the topics are listed. The bottom stays open for the hub's
+// label, and the direction of the edge back to the degree (about 31° for AI) is left clear; the rings mirror.
 const ringAngles: Record<string, number[]> = {
-  ai: [95, 140, 185, 230, 325],
-  web: [85, 40, -5, -50, 215],
+  ai: [76, 113, 150, 187, 224, 316, 352],
+  web: [104, 67, 30, -7, -44, 188, 224],
 }
 
 /** Satellite position on a ring around a hub, deterministic. */
@@ -64,7 +76,7 @@ function build(): PlacedNode[] {
       const hub = hubPosition[node.parent]
       position = ringAround(hub, node.parent, counters[node.parent]++)
     } else {
-      position = otherPosition[node.id]
+      position = onArc(node.id)
     }
     const size = node.kind === 'root' ? 0.5 : node.kind === 'hub' ? 0.62 : 0.3
     return { ...node, position, size }
@@ -88,10 +100,10 @@ export function isInGroup(node: TopicNode, group: GroupId): boolean {
 }
 
 export const cameraFocus: Record<GroupId, CameraFocus> = {
-  all: { center: [0, -0.2, 0.2], halfWidth: 5.3, halfHeight: 4.2 },
-  ai: { center: [hubPosition.ai[0] + 0.5, hubPosition.ai[1] - 0.1, 0], halfWidth: 3.6, halfHeight: 2.6 },
-  web: { center: [hubPosition.web[0] - 0.5, hubPosition.web[1] - 0.1, 0], halfWidth: 3.6, halfHeight: 2.6 },
-  other: { center: [0, -2.4, 1.1], halfWidth: 3.7, halfHeight: 1.9 },
+  all: { center: [0, 0.6, 0], halfWidth: 5.6, halfHeight: 3.6 },
+  ai: { center: [hubPosition.ai[0] + 0.4, hubPosition.ai[1] - 0.1, 0], halfWidth: 3.8, halfHeight: 2.6 },
+  web: { center: [hubPosition.web[0] - 0.4, hubPosition.web[1] - 0.1, 0], halfWidth: 3.8, halfHeight: 2.6 },
+  other: { center: [0, 2.35, -0.2], halfWidth: 3.6, halfHeight: 1.9 },
 }
 
 const TAN_HALF_FOV = Math.tan((36 * Math.PI) / 360)

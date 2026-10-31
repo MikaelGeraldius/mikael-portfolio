@@ -48,7 +48,7 @@ the Taste inspector (see "Known departures").
 
 - [x] Public contact confirmed: email only (`ops.gege.lie@gmail.com`), no phone number.
 - [x] Font files are kept out of the public repository and downloaded from Fontshare at build time (see `FONTS.md`).
-- [x] First real project added: RegionMusic, in the Work chapter (`projects` in `src/content.ts`).
+- [x] Real projects in the Work chapter (`projects` in `src/content.ts`): the song mood classifier and RegionMusic. Web screenshots are captured from the live page with `node scripts/shoot-project.mjs <url> <outPrefix> [#section ...]`.
 - [ ] Add further projects, a CV link and profile links only when Mikael supplies them, with images carrying their
       provenance.
 - [ ] Decide on a custom domain, if wanted.

@@ -8,6 +8,14 @@ import Arrow from './Arrow'
 const plain = (event: MouseEvent) =>
   event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
 
+/** A lesson reads "The lesson: what happened". The part before the colon becomes its title. */
+function splitLesson(item: string): [string, string] {
+  const at = item.indexOf(': ')
+  if (at < 1 || at > 90) return ['', item]
+  const detail = item.slice(at + 2)
+  return [item.slice(0, at), detail.charAt(0).toUpperCase() + detail.slice(1)]
+}
+
 /** Order of entrance inside the page, 60ms apart. */
 const step = (i: number) => ({ '--i': i }) as CSSProperties
 
@@ -82,9 +90,16 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
           <Arrow back />
           <span>All work</span>
         </a>
-        <a className="case-bar-link" href={project.repo}>
-          Code on GitHub
-        </a>
+        <div className="case-bar-links">
+          {project.site ? (
+            <a className="case-bar-link" href={project.site}>
+              Try it live
+            </a>
+          ) : null}
+          <a className="case-bar-link" href={project.repo}>
+            Code on GitHub
+          </a>
+        </div>
       </div>
 
       <div className="case-body">
@@ -92,7 +107,11 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
           <h2 id={titleId} className="case-title case-in" style={step(0)} tabIndex={-1}>
             {project.name}
           </h2>
-          <dl className="case-facts case-in" style={step(1)}>
+          <div className="case-summary case-in" style={step(1)}>
+            <p className="lead">{project.summary}</p>
+            {project.credit ? <p className="body case-credit">{project.credit}</p> : null}
+          </div>
+          <dl className="case-facts case-in" style={step(2)}>
             <div>
               <dt className="small">Year</dt>
               <dd>{project.year}</dd>
@@ -106,15 +125,12 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
               <dd>{project.kind}</dd>
             </div>
           </dl>
-          <p className="lead case-summary case-in" style={step(2)}>
-            {project.summary}
-          </p>
         </header>
 
         <figure className="case-figure">
-          <div className="case-media">
+          <div className="case-media" data-frame={project.frame}>
             {project.shots.map((shot) => (
-              <img key={shot.src} src={shot.src} alt={shot.alt} width={540} height={1145} />
+              <img key={shot.src} src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} />
             ))}
           </div>
           <figcaption className="small case-in" style={step(3)}>
@@ -122,39 +138,54 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
           </figcaption>
         </figure>
 
-        <dl className="case-details">
-          <div className="case-row case-in" style={step(4)}>
-            <dt className="case-label">What it does</dt>
-            <dd className="body">{project.does}</dd>
-          </div>
-          <div className="case-row case-in" style={step(5)}>
-            <dt className="case-label">What I learned</dt>
-            <dd>
-              <ul className="case-learned">
-                {project.learned.map((item) => (
-                  <li className="body" key={item}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-          <div className="case-row case-in" style={step(6)}>
-            <dt className="case-label">Built with</dt>
-            <dd>
-              <ul className="case-stack body">
-                {project.stack.split(', ').map((tool) => (
-                  <li key={tool}>{tool}</li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        </dl>
+        {/* What it does and what it is built with share a row, so neither sits beside an empty column. */}
+        <div className="case-overview">
+          <section className="case-block case-does case-in" style={step(4)} aria-labelledby={`${titleId}-does`}>
+            <h3 id={`${titleId}-does`} className="case-label">
+              What it does
+            </h3>
+            <p className="body">{project.does}</p>
+          </section>
+          <section className="case-block case-built case-in" style={step(5)} aria-labelledby={`${titleId}-built`}>
+            <h3 id={`${titleId}-built`} className="case-label">
+              Built with
+            </h3>
+            <ul className="case-stack body">
+              {project.stack.split(', ').map((tool) => (
+                <li key={tool}>{tool}</li>
+              ))}
+            </ul>
+          </section>
+        </div>
+
+        <section className="case-block case-lessons" aria-labelledby={`${titleId}-learned`}>
+          <h3 id={`${titleId}-learned`} className="case-label case-in" style={step(6)}>
+            What I learned
+          </h3>
+          <ul className="case-learned">
+            {project.learned.map((item, i) => {
+              const [lesson, detail] = splitLesson(item)
+              return (
+                <li className="case-in" style={step(7 + Math.min(i, 5))} key={item}>
+                  {lesson ? <strong className="case-lesson">{lesson}</strong> : null}
+                  <p className="body">{detail}</p>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
 
         <footer className="case-foot">
-          <a className="contact-link" href={project.repo} aria-label={`${project.name} code on GitHub`}>
-            Code on GitHub
-          </a>
+          <div className="case-foot-links">
+            {project.site ? (
+              <a className="contact-link" href={project.site} aria-label={`Try ${project.name} live`}>
+                Try it live
+              </a>
+            ) : null}
+            <a className="contact-link" href={project.repo} aria-label={`${project.name} code on GitHub`}>
+              Code on GitHub
+            </a>
+          </div>
           {next ? (
             <a
               className="case-next"

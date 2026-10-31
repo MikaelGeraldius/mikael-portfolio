@@ -636,6 +636,16 @@ p {
 .work-card-media img + img {
   transform: translateY(12%);
 }
+/* A web page: its opening screen set larger than the panel, running off the right and bottom edges the way the
+   phones run off the bottom. */
+.work-card-media[data-frame='screen'] {
+  justify-content: flex-start;
+  padding-left: clamp(24px, 4vw, 56px);
+}
+.work-card-media[data-frame='screen'] img {
+  flex: none;
+  width: 140%;
+}
 .work-card-text {
   display: grid;
   align-content: start;
@@ -789,7 +799,7 @@ html.case-open {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: var(--gap);
-  padding: clamp(40px, 7vw, 112px) var(--margin) var(--chapter);
+  padding: clamp(40px, 7vw, 112px) var(--margin) clamp(56px, 7vw, 112px);
 }
 .case-head {
   grid-column: 1 / -1;
@@ -807,20 +817,32 @@ html.case-open {
 .case-title:focus {
   outline: none;
 }
-.case-facts {
-  grid-column: 1 / 6;
+/* The summary takes the wide side; the facts stand in a short column at the right, level with its first line. */
+.case-summary {
+  grid-column: 1 / 9;
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: start;
-  column-gap: clamp(28px, 4vw, 56px);
+  gap: 24px;
+}
+.case-summary .lead {
+  max-width: 48ch;
+}
+.case-credit {
+  max-width: 68ch;
+  color: var(--ink-2);
+}
+.case-facts {
+  grid-column: 9 / 13;
+  display: grid;
+  gap: 20px;
+  padding-top: 0.35em;
 }
 .case-facts dd {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: var(--t-body);
 }
-.case-summary {
-  grid-column: 6 / 13;
-  max-width: 34ch;
+.case-bar-links {
+  display: flex;
+  gap: clamp(16px, 3vw, 32px);
 }
 .case-figure {
   grid-column: 1 / -1;
@@ -844,32 +866,64 @@ html.case-open {
 .case-media img + img {
   margin-top: clamp(32px, 6vw, 96px);
 }
-.case-details {
-  grid-column: 1 / -1;
-  display: grid;
-  gap: clamp(40px, 5vw, 72px);
-  margin-top: var(--head-gap);
+/* Web pages stack, one full screen after another. */
+.case-media[data-frame='screen'] {
+  flex-direction: column;
+  align-items: center;
 }
-.case-row {
+.case-media[data-frame='screen'] img {
+  width: 100%;
+  max-width: 1120px;
+}
+.case-media[data-frame='screen'] img + img {
+  margin-top: 0;
+}
+/* Each part is a heading with its content directly beneath, laid across the full width. */
+.case-block {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: var(--gap);
-  align-items: baseline;
+  align-content: start;
+  gap: 20px;
 }
 .case-label {
-  grid-column: 1 / 6;
   font-family: var(--display);
   font-size: var(--t-lead);
   letter-spacing: -0.01em;
   line-height: var(--lh-sub);
 }
-.case-row dd {
-  grid-column: 6 / 13;
-  margin: 0;
+.case-overview {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  row-gap: clamp(48px, 6vw, 72px);
+  margin-top: var(--head-gap);
 }
+.case-does {
+  grid-column: 1 / 8;
+}
+.case-built {
+  grid-column: 9 / 13;
+}
+.case-lessons {
+  grid-column: 1 / -1;
+  gap: clamp(28px, 3vw, 40px);
+  margin-top: var(--head-gap);
+}
+/* The lessons sit two to a row, each led by its point in medium weight. */
 .case-learned {
   display: grid;
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(32px, 4vw, 56px) calc(var(--gap) * 2);
+}
+.case-learned li {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+.case-lesson {
+  font-size: var(--t-body);
+  font-weight: 500;
+  line-height: 1.4;
 }
 .case-stack {
   display: flex;
@@ -887,7 +941,7 @@ html.case-open {
   color: var(--ink-2);
 }
 .case-foot {
-  grid-column: 6 / 13;
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -897,6 +951,11 @@ html.case-open {
 }
 .case-back-foot {
   font-weight: 500;
+}
+.case-foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px clamp(24px, 3vw, 40px);
 }
 .case-next {
   display: grid;
@@ -1172,10 +1231,19 @@ html:not(.js) .focus-detail {
     min-height: 0;
     aspect-ratio: 4 / 3;
   }
-  .case-facts,
   .case-summary,
-  .case-foot {
+  .case-facts,
+  .case-does,
+  .case-built {
     grid-column: 1 / -1;
+  }
+  /* Narrower screens set the facts in one row under the summary. */
+  .case-facts {
+    grid-row: auto;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    column-gap: clamp(28px, 6vw, 56px);
+    padding-top: 0;
   }
 }
 
@@ -1204,13 +1272,8 @@ html:not(.js) .focus-detail {
   .studied-note {
     margin-left: 0;
   }
-  .case-row {
+  .case-learned {
     grid-template-columns: 1fr;
-    row-gap: 16px;
-  }
-  .case-label,
-  .case-row dd {
-    grid-column: 1;
   }
   .case-media img {
     width: 46%;

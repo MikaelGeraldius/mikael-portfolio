@@ -74,8 +74,13 @@ function onPopState() {
 }
 
 export function openProject(slug: string) {
-  window.history.pushState(null, '', projectHref(slug))
-  pushed = true
+  // From one project page to the next, the address is replaced, so Back still returns to the work section.
+  if (document.querySelector('.case[data-open]')) {
+    window.history.replaceState(null, '', projectHref(slug))
+  } else {
+    window.history.pushState(null, '', projectHref(slug))
+    pushed = true
+  }
   transition(slug, notify, true)
 }
 

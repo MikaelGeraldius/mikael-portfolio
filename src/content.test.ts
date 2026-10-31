@@ -21,10 +21,17 @@ describe('confirmed facts', () => {
     }
   })
 
-  it('shows only the confirmed project, linked to its real repository', () => {
-    expect(projects.map((p) => p.name)).toEqual(['RegionMusic'])
-    expect(projects[0].repo).toBe('https://github.com/MikaelGeraldius/RegionMusic')
-    for (const p of projects) expect(p.learned.length).toBeGreaterThan(0)
+  it('shows only the confirmed projects, linked to their real repositories', () => {
+    expect(projects.map((p) => p.name)).toEqual(['Song mood classifier', 'RegionMusic'])
+    expect(projects.map((p) => p.repo)).toEqual([
+      'https://github.com/MikaelGeraldius/mood-classifier',
+      'https://github.com/MikaelGeraldius/RegionMusic',
+    ])
+    expect(new Set(projects.map((p) => p.slug)).size).toBe(projects.length)
+    for (const p of projects) {
+      expect(p.learned.length).toBeGreaterThan(0)
+      expect(p.shots.length).toBeGreaterThan(0)
+    }
   })
 
   it('invents no other projects, employers or profiles', () => {
@@ -41,10 +48,37 @@ describe('topic map data', () => {
   })
 
   it('lists the nodes of each group for the accessible list', () => {
-    expect(nodesForGroup('all').map((n) => n.id)).toEqual(['informatics', 'ai', 'web', 'backend', 'mobile', 'game'])
-    expect(nodesForGroup('ai').map((n) => n.id)).toEqual(['ai', 'ml', 'claude', 'chatgpt', 'gemini', 'hermes'])
-    expect(nodesForGroup('web').map((n) => n.id)).toEqual(['web', 'html', 'js', 'ts', 'react', 'tailwind'])
-    expect(nodesForGroup('other')).toHaveLength(3)
+    expect(nodesForGroup('all').map((n) => n.id)).toEqual([
+      'informatics',
+      'ai',
+      'web',
+      'backend',
+      'mobile',
+      'game',
+      'audio',
+      'location',
+    ])
+    expect(nodesForGroup('ai').map((n) => n.id)).toEqual([
+      'ai',
+      'ml',
+      'sklearn',
+      'pandas',
+      'claude',
+      'chatgpt',
+      'gemini',
+      'hermes',
+    ])
+    expect(nodesForGroup('web').map((n) => n.id)).toEqual([
+      'web',
+      'html',
+      'js',
+      'ts',
+      'react',
+      'tailwind',
+      'vite',
+      'webaudio',
+    ])
+    expect(nodesForGroup('other')).toHaveLength(5)
   })
 
   it('describes each exploration group', () => {

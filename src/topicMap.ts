@@ -42,6 +42,8 @@ const ACCENT = '#ff6b3d'
 const DIM_NODE = '#5c6778'
 const BASE_PITCH = 0.2
 const MAX_YAW = 0.75
+/** How far under a hub its label sits, in world units: just clear of the lowest topics on its ring. */
+const HUB_CAPTION = 1.5
 
 export interface TopicMapOptions {
   container: HTMLElement
@@ -61,6 +63,8 @@ interface NodeView {
   scaleTarget: number
   color: Color
   colorTarget: Color
+  /** The label's rendered width, measured once and again after a resize or a font load. */
+  labelWidth: number
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
@@ -151,6 +155,10 @@ export class TopicMap {
     this.applyGroupStyles(true)
     this.snapToTargets()
     this.render()
+    // The label face may arrive after the map; once it has, the widths it was laid out with are stale.
+    document.fonts?.ready.then(() => {
+      if (!this.disposed) this.remeasureLabels()
+    })
   }
 
   // ---- public API -------------------------------------------------------
@@ -319,6 +327,7 @@ export class TopicMap {
         scaleTarget: 1,
         color: new Color(INK),
         colorTarget: new Color(INK),
+        labelWidth: 0,
       })
     }
   }
@@ -441,16 +450,47 @@ export class TopicMap {
     this.placeLabels()
   }
 
+  private toScreen(v: NodeView): [number, number] {
+    this.tmp.copy(v.mesh.position)
+    v.mesh.parent!.localToWorld(this.tmp)
+    this.tmp.project(this.camera)
+    return [(this.tmp.x * 0.5 + 0.5) * this.width, (-this.tmp.y * 0.5 + 0.5) * this.height]
+  }
+
+  /**
+   * A topic's label sits outward from its parent, on the far side of the node, so the labels around a ring
+   * fan out instead of stacking under each other. A hub's label sits under its ring, as the cluster's caption;
+   * the degree's label sits under its node.
+   */
   private placeLabels() {
     const pxPerUnit = this.height / (2 * this.distance * Math.tan((this.camera.fov * Math.PI) / 360))
+    const screen = new Map(this.views.map((v) => [v.data.id, this.toScreen(v)]))
+    // Measure before moving anything, so reading widths never forces a layout between writes.
+    for (const v of this.views) if (!v.labelWidth) v.labelWidth = v.label.offsetWidth
     for (const v of this.views) {
-      this.tmp.copy(v.mesh.position)
-      v.mesh.parent!.localToWorld(this.tmp)
-      this.tmp.project(this.camera)
-      const x = (this.tmp.x * 0.5 + 0.5) * this.width
-      const y = (-this.tmp.y * 0.5 + 0.5) * this.height
-      const offset = 10 + v.data.size * v.scale * pxPerUnit
-      v.label.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + offset).toFixed(1)}px, 0) translateX(-50%)`
+      const [x, y] = screen.get(v.data.id)!
+      const radius = v.data.size * v.scale * pxPerUnit
+      // Where the label's anchor point sits, and how far across and down the label that point is (0 to 1).
+      let ax = x
+      let ay = y
+      let fx = 0.5
+      let fy = 0
+      if (v.data.kind === 'topic' && v.data.parent) {
+        const [px, py] = screen.get(v.data.parent)!
+        const len = Math.hypot(x - px, y - py) || 1
+        const ux = (x - px) / len
+        const uy = (y - py) / len
+        const gap = radius + 8
+        ax = x + ux * gap
+        ay = y + uy * gap
+        fx = 0.5 - 0.5 * ux
+        fy = 0.5 - 0.5 * uy
+      } else {
+        ay = y + (v.data.kind === 'hub' ? HUB_CAPTION * pxPerUnit : 10 + radius)
+      }
+      // Labels at the edge of a narrow map slide inward rather than being cut off.
+      const left = clamp(ax - fx * v.labelWidth, 4, Math.max(4, this.width - v.labelWidth - 4))
+      v.label.style.transform = `translate3d(${left.toFixed(1)}px, ${ay.toFixed(1)}px, 0) translateY(${(-fy * 100).toFixed(1)}%)`
     }
   }
 
@@ -463,6 +503,12 @@ export class TopicMap {
     this.camera.updateProjectionMatrix()
     this.distanceTarget = distanceFor(cameraFocus[this.group], this.camera.aspect)
     this.distance = this.distanceTarget
+    this.remeasureLabels()
+  }
+
+  /** Label widths change with the font and the layout; measure them again on the next frame drawn. */
+  private remeasureLabels() {
+    for (const v of this.views) v.labelWidth = 0
     this.render()
   }
 
