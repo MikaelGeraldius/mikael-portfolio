@@ -589,64 +589,343 @@ p {
   padding-top: 12px;
 }
 
-/* Studied: the full list, one area per line with its topics beside it */
+/* Work: a heading, then one card per project. Each card is a tone step on the raised field, never a line or a
+   shadow, and the whole card opens the project's page. */
 .projects {
   padding: var(--chapter) var(--margin);
   background: var(--raised);
 }
-.projects h2 {
+.projects-head {
   margin-bottom: var(--head-gap);
 }
-.project {
+.work-grid {
   display: grid;
-  gap: clamp(28px, 3.4vw, 48px);
-}
-.project-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: var(--gap);
-  row-gap: 8px;
-}
-.project-summary {
-  max-width: 34ch;
-}
-.project-shots {
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 280px));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gap);
 }
-.project-shots img {
+.work-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--ground);
+  transition:
+    background-color 200ms var(--ease),
+    transform 160ms var(--ease-out);
+}
+.work-card:active {
+  transform: scale(0.99);
+}
+/* The picture: the app's screens rising out of the deep field, cropped at its foot like phones on a table. */
+.work-card-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(12px, 2vw, 28px);
+  padding: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 40px) 0;
+  background: var(--deep);
+}
+.work-card-media img {
   display: block;
-  width: 100%;
+  width: min(38%, 240px);
+  height: auto;
+  transition: transform 700ms var(--ease-expo);
+}
+.work-card-media img + img {
+  transform: translateY(12%);
+}
+.work-card-text {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: clamp(24px, 3vw, 40px);
+}
+.work-card-name {
+  font-size: var(--t-head);
+  letter-spacing: -0.02em;
+  line-height: var(--lh-head);
+}
+.work-card-link {
+  text-decoration: none;
+}
+/* The project's name is the link; it stretches over the whole card so any part of it opens the page. */
+.work-card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.work-card-link:focus-visible {
+  outline: none;
+}
+.work-card:has(.work-card-link:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+.work-card-blurb {
+  max-width: 44ch;
+  margin-top: 8px;
+}
+.work-card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-weight: 500;
+}
+.work-card-more span {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+  transition: color 200ms var(--ease);
+}
+.arrow {
+  flex: none;
+  transition: transform 300ms var(--ease-out);
+}
+.arrow-back {
+  transform: scaleX(-1);
+}
+@media (hover: hover) and (pointer: fine) {
+  .work-card:hover {
+    background: #12161c;
+  }
+  .work-card:hover .work-card-media img {
+    transform: translateY(-3%);
+  }
+  .work-card:hover .work-card-media img + img {
+    transform: translateY(7%);
+  }
+  .work-card:hover .work-card-more .arrow {
+    transform: translateX(5px);
+  }
+  .work-card:hover .work-card-more span {
+    color: var(--accent);
+  }
+}
+
+/* One project: one wide card, picture left and words right, so the row is filled rather than half empty. */
+.work-grid[data-count='1'] {
+  grid-template-columns: 1fr;
+}
+.work-grid[data-count='1'] .work-card {
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: none;
+}
+.work-grid[data-count='1'] .work-card-media {
+  grid-column: 1 / 8;
+  aspect-ratio: auto;
+  min-height: clamp(420px, 44vw, 640px);
+}
+.work-grid[data-count='1'] .work-card-text {
+  grid-column: 8 / 13;
+  align-content: end;
+}
+
+/* Project page: its own page over the site, on the ground field, with a plain bar to go back. */
+.case {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ground);
+  scrollbar-color: #3b4556 var(--ground);
+}
+.case[data-open] {
+  display: block;
+}
+/* Without script the address opens the page. */
+html:not(.js) .case:target {
+  display: block;
+}
+html.case-open {
+  overflow: hidden;
+}
+.case-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--header);
+  padding-inline: var(--margin);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--ground);
+  font-size: var(--t-small);
+  font-weight: 500;
+}
+.case-back,
+.case-bar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  text-decoration: none;
+  transition: transform 160ms var(--ease-out);
+}
+.case-back:active,
+.case-bar-link:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .case-back:hover span,
+  .case-bar-link:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+  }
+  .case-back:hover .arrow-back {
+    transform: scaleX(-1) translateX(4px);
+  }
+}
+.case-body {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  padding: clamp(40px, 7vw, 112px) var(--margin) var(--chapter);
+}
+.case-head {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: clamp(32px, 4vw, 56px);
+  align-items: start;
+}
+.case-title {
+  grid-column: 1 / -1;
+  font-size: min(var(--t-display), 11rem);
+  letter-spacing: -0.03em;
+  line-height: var(--lh-display);
+}
+.case-title:focus {
+  outline: none;
+}
+.case-facts {
+  grid-column: 1 / 6;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  column-gap: clamp(28px, 4vw, 56px);
+}
+.case-facts dd {
+  margin-top: 4px;
+  font-size: var(--t-body);
+}
+.case-summary {
+  grid-column: 6 / 13;
+  max-width: 34ch;
+}
+.case-figure {
+  grid-column: 1 / -1;
+  margin: clamp(56px, 7vw, 104px) 0 0;
+  display: grid;
+  gap: 16px;
+}
+.case-media {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(16px, 4vw, 64px);
+  padding: clamp(32px, 6vw, 96px) var(--margin);
+  background: var(--deep);
+}
+.case-media img {
+  display: block;
+  width: min(40%, 340px);
   height: auto;
 }
-.project-shots figcaption {
+.case-media img + img {
+  margin-top: clamp(32px, 6vw, 96px);
+}
+.case-details {
   grid-column: 1 / -1;
-}
-.project-details {
   display: grid;
-  gap: clamp(28px, 3.4vw, 48px);
+  gap: clamp(40px, 5vw, 72px);
+  margin-top: var(--head-gap);
 }
-/* Labels sit where the studied area names sit: Gambarino at lead size. */
-.project-label {
+.case-row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gap);
+  align-items: baseline;
+}
+.case-label {
   grid-column: 1 / 6;
   font-family: var(--display);
   font-size: var(--t-lead);
   letter-spacing: -0.01em;
   line-height: var(--lh-sub);
 }
-.project-details dd {
+.case-row dd {
+  grid-column: 6 / 13;
   margin: 0;
 }
-.project-learned {
-  list-style: none;
+.case-learned {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
-.project-link {
-  margin-left: calc((100% + var(--gap)) * 5 / 12);
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+}
+/* A plain list read as a line: tools separated by a middle dot in the supporting ink, no chips behind them. */
+.case-stack li {
+  white-space: nowrap;
+}
+/* The dot trails each tool, so a wrapped line never opens with one. */
+.case-stack li:not(:last-child)::after {
+  content: '\00b7';
+  padding-inline: 0.6em;
+  color: var(--ink-2);
+}
+.case-foot {
+  grid-column: 6 / 13;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px var(--gap);
+  margin-top: var(--head-gap);
+}
+.case-back-foot {
+  font-weight: 500;
+}
+.case-next {
+  display: grid;
+  text-decoration: none;
+}
+.case-next-name {
+  font-family: var(--display);
+  font-size: var(--t-lead);
+  line-height: var(--lh-sub);
+}
+
+/* The card's picture morphs into the page's (src/route.ts). */
+.case[data-open] .case-media {
+  view-transition-name: case-media;
+}
+::view-transition-group(case-media) {
+  animation-duration: 560ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+::view-transition-old(case-media),
+::view-transition-new(case-media) {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: var(--ease-out);
 }
 
 .studied {
@@ -796,6 +1075,16 @@ html:not(.js) .focus-detail {
   .hero-foot > * + * {
     animation-delay: 380ms;
   }
+
+  /* Project page: while the picture morphs into place, the words rise in reading order, 60ms apart. */
+  .case[data-open] .case-in {
+    animation: fade-up 800ms var(--ease-expo) both;
+    animation-delay: calc(140ms + var(--i, 0) * 60ms);
+  }
+  /* Where there is no view transition, the page itself arrives: a short rise over the site. */
+  html:not(.vt) .case[data-open] {
+    animation: case-enter 420ms var(--ease-out) both;
+  }
 }
 /* Reduced motion: nothing travels, but content still fades in rather than snapping on. */
 @media (prefers-reduced-motion: reduce) {
@@ -817,6 +1106,12 @@ html:not(.js) .focus-detail {
   from {
     opacity: 0;
     transform: translateY(28px);
+  }
+}
+@keyframes case-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
   }
 }
 @keyframes rise {
@@ -861,6 +1156,27 @@ html:not(.js) .focus-detail {
   .focus-detail {
     grid-row: 4;
   }
+  /* Cards stack: picture above words, for one project or several. */
+  .work-grid,
+  .work-grid[data-count='1'] {
+    grid-template-columns: 1fr;
+  }
+  .work-grid[data-count='1'] .work-card {
+    grid-template-columns: 1fr;
+  }
+  .work-grid[data-count='1'] .work-card-media,
+  .work-grid[data-count='1'] .work-card-text {
+    grid-column: 1;
+  }
+  .work-grid[data-count='1'] .work-card-media {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .case-facts,
+  .case-summary,
+  .case-foot {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (max-width: 760px) {
@@ -885,12 +1201,19 @@ html:not(.js) .focus-detail {
   .studied-topics {
     grid-column: 1;
   }
-  .studied-note,
-  .project-link {
+  .studied-note {
     margin-left: 0;
   }
-  .project-label {
+  .case-row {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+  }
+  .case-label,
+  .case-row dd {
     grid-column: 1;
+  }
+  .case-media img {
+    width: 46%;
   }
   .hero {
     min-height: 0;

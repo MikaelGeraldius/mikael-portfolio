@@ -58,8 +58,15 @@ export const studied: StudyArea[] = [
 ]
 
 export interface Project {
+  /** The project page's address: `#work-<slug>`. */
+  slug: string
   name: string
+  kind: string
+  year: string
+  platform: string
   meta: string
+  /** One line for the card; the summary opens the project page. */
+  blurb: string
   summary: string
   does: string
   learned: string[]
@@ -73,8 +80,13 @@ export interface Project {
 // files and is not in the repository, so the page names no soundtrack.
 export const projects: Project[] = [
   {
+    slug: 'regionmusic',
     name: 'RegionMusic',
+    kind: 'Personal project',
+    year: '2026',
+    platform: 'Android',
     meta: 'Personal project · 2026 · Android',
+    blurb: 'An Android app that plays a theme for wherever you are, like the overworld of an old handheld RPG.',
     summary:
       'An Android app that plays a theme for wherever you are, like the overworld of an old handheld RPG: a city theme in malls and big buildings, a town theme in housing complexes and a route theme on the road.',
     does:

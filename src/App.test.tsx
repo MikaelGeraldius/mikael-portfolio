@@ -32,6 +32,13 @@ describe('page markup', () => {
     expect(html).toContain('aria-live="polite"')
   })
 
+  it('links each work card to its own project page, present in the markup so it reads without script', () => {
+    expect(html).toContain('href="#work-regionmusic"')
+    expect(html).toContain('id="work-regionmusic"')
+    expect(html).toContain('What I learned')
+    expect(html).toContain('href="#projects"')
+  })
+
   it('has real contact links and only the confirmed project', () => {
     expect(html).toContain('mailto:ops.gege.lie@gmail.com')
     expect(html).toContain('RegionMusic')

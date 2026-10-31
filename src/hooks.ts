@@ -21,7 +21,13 @@ export function useSmoothScroll(reduced: boolean) {
   }, [reduced])
 }
 
-const reducedQuery = '(prefers-reduced-motion: reduce)'
+/** Holds the page still while a project page lies over it, and lets it go again. */
+export function setSmoothScrollPaused(paused: boolean) {
+  if (paused) lenis?.stop()
+  else lenis?.start()
+}
+
+const reducedQuery ='(prefers-reduced-motion: reduce)'
 
 function subscribeReduced(callback: () => void) {
   const mq = window.matchMedia(reducedQuery)
