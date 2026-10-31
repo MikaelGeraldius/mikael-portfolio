@@ -204,6 +204,24 @@ async function fullDesktopChecks(browser) {
   check('clicking the Web design hub in 3D selects it and zooms the group', hubPick.group === 'web' && /^Web design\./.test(hubPick.readout), JSON.stringify(hubPick))
   await sectionShot(page, '#focus', 'desktop-focus-web.jpg')
 
+  // Clicking the degree goes back to the overview, as the page first showed it.
+  const rootLabel = await page.eval(() => {
+    const r = [...document.querySelectorAll('.topic-map-label')].find((l) => l.textContent === 'Informatics').getBoundingClientRect()
+    return { x: r.x + r.width / 2, y: r.y }
+  })
+  let homeState = { group: 'web', pressed: 1 }
+  for (let lift = 18; lift <= 60 && homeState.group !== 'all'; lift += 8) {
+    const tap = { x: rootLabel.x, y: rootLabel.y - lift }
+    await page.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: tap.x, y: tap.y, button: 'left', clickCount: 1 })
+    await page.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: tap.x, y: tap.y, button: 'left', clickCount: 1 })
+    await sleep(500)
+    homeState = await page.eval(() => ({
+      group: document.querySelector('.picker input:checked').value,
+      pressed: document.querySelectorAll('.topic-list button[aria-pressed="true"]').length,
+    }))
+  }
+  check('clicking Informatics in 3D returns to the overview with nothing selected', homeState.group === 'all' && homeState.pressed === 0, JSON.stringify(homeState))
+
   // Remaining sections
   await scrollTo(page, '#studied')
   await sectionShot(page, '#studied', 'desktop-studied.jpg')

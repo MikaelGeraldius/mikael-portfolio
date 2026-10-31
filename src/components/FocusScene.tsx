@@ -4,6 +4,8 @@ import { TopicMap } from '../topicMap'
 
 interface Props {
   group: GroupId
+  /** Changes each time the visitor goes back to the start; the camera returns to its first view. */
+  home: number
   selectedId: string | null
   reducedMotion: boolean
   onSelect: (id: string | null) => void
@@ -12,7 +14,7 @@ interface Props {
 
 const STEP = 0.12
 
-export default function FocusScene({ group, selectedId, reducedMotion, onSelect, onFail }: Props) {
+export default function FocusScene({ group, home, selectedId, reducedMotion, onSelect, onFail }: Props) {
   const stageRef = useRef<HTMLDivElement>(null)
   const labelsRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<TopicMap | null>(null)
@@ -66,7 +68,8 @@ export default function FocusScene({ group, selectedId, reducedMotion, onSelect,
     }
   }, [])
 
-  useEffect(() => mapRef.current?.setGroup(group), [group])
+  // setGroup also straightens the camera, so it doubles as "back to the first view" when the group is unchanged.
+  useEffect(() => mapRef.current?.setGroup(group), [group, home])
   useEffect(() => mapRef.current?.setSelected(selectedId), [selectedId])
   useEffect(() => mapRef.current?.setReducedMotion(reducedMotion), [reducedMotion])
 

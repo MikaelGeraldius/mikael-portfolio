@@ -11,6 +11,7 @@ export default function Focus() {
   const reduced = useReducedMotion()
   const [group, setGroup] = useState<GroupId>('all')
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [home, setHome] = useState(0)
   const [status, setStatus] = useState<SceneStatus>('pending')
   const [stageRef, near] = useNearViewport<HTMLDivElement>()
 
@@ -27,14 +28,19 @@ export default function Focus() {
   // Selecting from the 3D view (or the list) keeps the group in step with the node.
   const select = useCallback(
     (id: string | null) => {
+      const node = id ? topicNodes.find((n) => n.id === id) : undefined
+      // The degree is where the map starts: choosing it goes back to the overview, as the page first showed it.
+      if (node?.kind === 'root') {
+        chooseGroup('all')
+        setHome((n) => n + 1)
+        return
+      }
       setSelectedId(id)
-      if (!id) return
-      const node = topicNodes.find((n) => n.id === id)
       if (!node) return
       const home: GroupId = node.group === 'root' ? 'all' : node.group
-      if (group === 'all' ? node.kind === 'hub' : home !== group && node.kind !== 'root') setGroup(home)
+      if (group === 'all' ? node.kind === 'hub' : home !== group) setGroup(home)
     },
-    [group],
+    [group, chooseGroup],
   )
 
   const current = groups.find((g) => g.id === group)!
@@ -79,6 +85,7 @@ export default function Focus() {
             <Suspense fallback={<div className="scene-loading" aria-hidden="true" />}>
               <FocusScene
                 group={group}
+                home={home}
                 selectedId={selectedId}
                 reducedMotion={reduced}
                 onSelect={select}
