@@ -1,6 +1,7 @@
 // Single source of truth for every fact shown on the page.
-// Only details confirmed by Mikael live here. There are no projects, employers,
-// certificates, social profiles or CV, so none are listed.
+// Only details confirmed by Mikael live here. The one project is RegionMusic,
+// which he built and published; there are no employers, certificates, social
+// profiles or CV, so none are listed.
 
 export const person = {
   name: 'Mikael Geraldius Gunawan',
@@ -48,10 +49,45 @@ export interface StudyArea {
 export const studied: StudyArea[] = [
   { area: 'Frontend', topics: 'HTML, JavaScript, TypeScript, React, Tailwind CSS' },
   { area: 'Backend', topics: 'MySQL, PostgreSQL, ExpressJS' },
-  { area: 'Mobile', topics: 'Kotlin, Room' },
+  { area: 'Mobile', topics: 'Kotlin, Room, React Native, Expo' },
+  { area: 'UI design', topics: 'Visual hierarchy, spacing grids, colour systems and theming, icon design' },
+  { area: 'Audio and playback', topics: 'Spotify Web API, background audio, audio processing in Python' },
   { area: 'Machine learning', topics: 'Methods implemented in Python' },
   { area: 'Game development', topics: 'Unity, C#' },
-  { area: 'AI assistants', topics: 'Claude, ChatGPT, Gemini, Hermes' },
+  { area: 'AI assistants', topics: 'Claude, Claude Code, ChatGPT, Gemini, Hermes' },
+]
+
+export interface Project {
+  name: string
+  meta: string
+  summary: string
+  does: string
+  learned: string[]
+  stack: string
+  repo: string
+}
+
+// Built Oct 2026; code public at the repo below. The music itself is Mikael's own
+// files and is not in the repository, so the page names no soundtrack.
+export const projects: Project[] = [
+  {
+    name: 'RegionMusic',
+    meta: 'Personal project · 2026 · Android',
+    summary:
+      'An Android app that plays a theme for wherever you are, like the overworld of an old handheld RPG: a city theme in malls and big buildings, a town theme in housing complexes and a route theme on the road.',
+    does:
+      'It follows my location in the background, even with the phone locked, works out what kind of place I’m in from OpenStreetMap, and crossfades to that place’s theme. Every place keeps its own song, and my own neighbourhood plays the starting-area music.',
+    learned: [
+      'Mobile development with Expo and React Native: development builds, Android permissions, background location and standalone release builds.',
+      'Location logic: classifying places from OpenStreetMap data with point-in-polygon tests, and smoothing out GPS jitter so the music doesn’t flicker at borders.',
+      'Playback integrations: controlling Spotify through its Web API with OAuth sign-in, then switching to local playback with background audio, lock-screen controls and crossfades.',
+      'Audio processing in Python: finding each track’s loop point with autocorrelation so songs repeat with no fade or gap.',
+      'UI design: visual hierarchy, an 8-point spacing grid, colour systems and theming, and drawing a pixel-art app icon.',
+      'Building with an AI pair programmer: planning in phases with Claude Code, testing on a real phone and fixing what broke there.',
+    ],
+    stack: 'TypeScript, React Native, Expo, expo-audio, expo-location, OpenStreetMap, Python, numpy, ffmpeg',
+    repo: 'https://github.com/MikaelGeraldius/RegionMusic',
+  },
 ]
 
 export type GroupId = 'all' | 'ai' | 'web' | 'other'

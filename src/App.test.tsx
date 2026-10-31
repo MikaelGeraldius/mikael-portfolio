@@ -15,7 +15,7 @@ describe('page markup', () => {
   })
 
   it('names every section with a heading', () => {
-    for (const title of ['Studying Informatics', 'AI and web design', 'What I’ve studied', 'Get in touch']) {
+    for (const title of ['Studying Informatics', 'AI and web design', 'What I’ve built', 'What I’ve studied', 'Get in touch']) {
       expect(html).toContain(title)
     }
   })
@@ -32,8 +32,10 @@ describe('page markup', () => {
     expect(html).toContain('aria-live="polite"')
   })
 
-  it('has real contact links and no project cards', () => {
+  it('has real contact links and only the confirmed project', () => {
     expect(html).toContain('mailto:ops.gege.lie@gmail.com')
+    expect(html).toContain('RegionMusic')
+    expect(html).toContain('href="https://github.com/MikaelGeraldius/RegionMusic"')
     expect(html).not.toContain('tel:')
     expect(html).not.toMatch(/case study|lorem\s+ipsum/i)
   })

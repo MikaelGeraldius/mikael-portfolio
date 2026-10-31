@@ -216,7 +216,19 @@ export function useSmoothAnchors() {
       const duration = anchorDuration(distance)
       // With smooth scrolling on, hand the trip to it: a wheel turn mid-flight then redirects it rather than fighting it.
       if (lenis) {
-        lenis.scrollTo(target, { duration: duration / 1000, easing: easeOutExpo })
+        const instance = lenis
+        instance.scrollTo(target, { duration: duration / 1000, easing: easeOutExpo, onComplete: () => cancel() })
+        // Lenis redirects on a wheel turn itself; a touch, a press or a scrolling key must stop it here,
+        // or a long trip runs on to the end under the visitor's finger.
+        const stopLenis = (event: Event) => {
+          if (event.type === 'keydown' && !SCROLL_KEYS.has((event as KeyboardEvent).key)) return
+          instance.stop()
+          instance.start()
+          cancel()
+        }
+        const lenisTypes = ['touchstart', 'mousedown', 'keydown'] as const
+        lenisTypes.forEach((type) => window.addEventListener(type, stopLenis, { passive: true }))
+        release = () => lenisTypes.forEach((type) => window.removeEventListener(type, stopLenis))
         return
       }
       const start = performance.now()

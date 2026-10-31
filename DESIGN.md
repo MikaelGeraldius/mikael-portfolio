@@ -63,7 +63,7 @@ components:
 
 A dark page where the type does the work: the name as large as two lines allow, a plain sentence under it that says what this is, and one orange that means "what he is after, or what you can do": the words *AI* and *web design* and the action. No tiles, boxes or blocks sit behind any text; emphasis is foreground colour and weight only. The one picture-like element is a low-poly topic map of what he has studied, which a visitor can turn and read.
 
-The page refuses the portfolio defaults (project-card wall, stock photography, glow, glass) because Mikael has no real work to show yet and says so plainly. Dark is a use-scene decision: a recruiter reading on a screen in the evening, one dense scroll, a 3D map that sits better on a deep field.
+The page refuses the portfolio defaults (project-card wall, stock photography, glow, glass). Real work is shown as type, not cards: one project chapter set like the studied rows. Dark is a use-scene decision: a recruiter reading on a screen in the evening, one dense scroll, a 3D map that sits better on a deep field.
 
 Replaces the earlier olive-on-bone system and the short-lived "token tiles" treatment (both retired).
 
@@ -77,7 +77,7 @@ Replaces the earlier olive-on-bone system and the short-lived "token tiles" trea
 ## Colors
 
 ### Fields
-- **Ground** (`#0e1115`): hero and Studied. **Raised** (`#151a21`): Education and Contact. **Deep** (`#090b0e`): the Focus chapter holding the map; the 3D fog and terrain fade into it.
+- **Ground** (`#0e1115`): hero and Studied. **Raised** (`#151a21`): Education, Work and Contact. **Deep** (`#090b0e`): the Focus chapter holding the map; the 3D fog and terrain fade into it.
 
 ### Ink
 - **Ink** (`#eef1f5`): all running text. **Ink 2** (`#a7b1be`): supporting text and unchosen controls only (8.9:1 on ground, 8.2:1 on raised).
@@ -103,7 +103,7 @@ Replaces the earlier olive-on-bone system and the short-lived "token tiles" trea
 
 ## Layout
 
-A 12-column grid inside one pair of equal margins (16 to 40px). Hero: name top-left, the role sentence about 50px beneath it, the button at the right on desktop and below on tablet and phone; the hero is at most 780px tall so the gap to the next chapter stays an ordinary section gap. Education: heading left, statement right, three numerals across. Focus: text and controls left, map right. Studied: area names left, topics right. Contact: heading and line, the two links at heading size, a call-to-action button, then the name at full width. Chapters are 96 to 200px apart. On phones everything stacks and the hero and contact buttons stay at their natural or full width.
+A 12-column grid inside one pair of equal margins (16 to 40px). Hero: name top-left, the role sentence about 50px beneath it, the button at the right on desktop and below on tablet and phone; the hero is at most 780px tall so the gap to the next chapter stays an ordinary section gap. Education: heading left, statement right, three numerals across. Focus: text and controls left, map right. Work ("What I’ve built"): heading, the project name in Gambarino at lead size with its meta line, a lead summary, then label rows (What it does, What I learned, Built with) in the studied grid, and the repo as a contact-style link. Studied: area names left, topics right. Contact: heading and line, the two links at heading size, a call-to-action button, then the name at full width. Chapters are 96 to 200px apart. On phones everything stacks and the hero and contact buttons stay at their natural or full width.
 
 ## Elevation & Depth
 
@@ -113,7 +113,7 @@ Flat. Depth exists only inside the 3D map, lit from one side, whose terrain and 
 
 - **Button:** square, 56px, accent fill, accent-ink text; hover (fine pointers) fills ink; press scales to 0.97 in 160ms. Hero and Contact.
 - **Focus controls:** a native radio group and toggle buttons set as plain text. The chosen one is full ink with a 2px accent underline; the rest are ink-2, ink on hover. 44px tall hit areas.
-- **Header:** plain 56px bar, wordmark left, four links right, field follows the chapter. Links underline in the accent on hover.
+- **Header:** plain 56px bar, wordmark left, five links right (Education is hidden below 420px so the bar stays one line), field follows the chapter. Links underline in the accent on hover.
 - **Contact links:** headline size; on hover they turn accent with an underline.
 - **Topic map:** lazy WebGL scene below the opening. Drag or arrow keys turn it; click selects. The topic list and readout hold the same content and are the no-WebGL fallback.
 
@@ -133,7 +133,7 @@ Flat. Depth exists only inside the 3D map, lit from one side, whose terrain and 
 
 ### Don't:
 - **Don't** put a background, tile, pill, highlight or pseudo-element block behind text.
-- **Don't** add project cards, placeholder work, stock photos or invented proof until Mikael has real work with provenance.
+- **Don't** add project cards, placeholder work, stock photos or invented proof; a project appears only when Mikael supplies real work, set as type in the Work chapter.
 - **Don't** add eyebrows, index numbers, hairline rules, gradients, shadows, glass, monospace or icon-topped cards.
 - **Don't** introduce a third typeface, a second accent, or a sixth type size.
 - **Don't** publish the contact details or font files without the checks in `README.md` and `FONTS.md`.

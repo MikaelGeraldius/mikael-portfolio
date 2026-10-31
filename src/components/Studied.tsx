@@ -15,7 +15,7 @@ export default function Studied() {
         ))}
       </ul>
       <p className="small studied-note reveal" data-reveal>
-        Everything here comes from my studies so far. Projects are not on this page yet.
+        From my studies at UMN and from building RegionMusic.
       </p>
     </section>
   )

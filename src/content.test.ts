@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { contact, facts, groups, mailtoHref, nodesForGroup, person, studied, topicNodes } from './content'
+import { contact, facts, groups, mailtoHref, nodesForGroup, person, projects, studied, topicNodes } from './content'
 
 describe('confirmed facts', () => {
   it('keeps the user-approved identity and timeline', () => {
@@ -16,12 +16,18 @@ describe('confirmed facts', () => {
 
   it('lists every studied area and AI assistant from the brief', () => {
     const text = studied.map((s) => `${s.area} ${s.topics}`).join(' ')
-    for (const word of ['HTML', 'JavaScript', 'TypeScript', 'React', 'Tailwind', 'MySQL', 'PostgreSQL', 'ExpressJS', 'Kotlin', 'Room', 'Python', 'Unity', 'C#', 'Claude', 'ChatGPT', 'Gemini', 'Hermes']) {
+    for (const word of ['HTML', 'JavaScript', 'TypeScript', 'React', 'Tailwind', 'MySQL', 'PostgreSQL', 'ExpressJS', 'Kotlin', 'Room', 'React Native', 'Expo', 'Python', 'Unity', 'C#', 'Claude', 'ChatGPT', 'Gemini', 'Hermes']) {
       expect(text).toContain(word)
     }
   })
 
-  it('invents no projects, employers or profiles', () => {
+  it('shows only the confirmed project, linked to its real repository', () => {
+    expect(projects.map((p) => p.name)).toEqual(['RegionMusic'])
+    expect(projects[0].repo).toBe('https://github.com/MikaelGeraldius/RegionMusic')
+    for (const p of projects) expect(p.learned.length).toBeGreaterThan(0)
+  })
+
+  it('invents no other projects, employers or profiles', () => {
     const all = JSON.stringify({ studied, topicNodes, groups })
     expect(all).not.toMatch(/project|intern at|certificate|github\.com|linkedin/i)
   })

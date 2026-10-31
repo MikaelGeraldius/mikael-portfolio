@@ -48,12 +48,15 @@ the Taste inspector (see "Known departures").
 
 - [x] Public contact confirmed: email only (`ops.gege.lie@gmail.com`), no phone number.
 - [x] Font files are kept out of the public repository and downloaded from Fontshare at build time (see `FONTS.md`).
-- [ ] Add real projects, a CV link and profile links only when Mikael supplies them, with images carrying their
-      provenance. There is deliberately no project section today.
+- [x] First real project added: RegionMusic, in the Work chapter (`projects` in `src/content.ts`).
+- [ ] Add further projects, a CV link and profile links only when Mikael supplies them, with images carrying their
+      provenance.
 - [ ] Decide on a custom domain, if wanted.
 - [x] Link-preview card: `public/og.png`, regenerated with `npm run og`.
 
 ## Known departures
+
+- `capture.mjs` "a second click mid-flight retargets smoothly" fails since the Work chapter made the page about 1,800px longer: a far anchor trip is capped at 1100ms, so the first expo-out frames move about 560px, over the check's 400px. Lengthening long trips would change the motion spec; left as is. The 8 other failures there predate the Work chapter.
 
 - The Taste inspector's `few-pictures` rule (four or more real pictures) is allowed rather than satisfied. The
   chosen direction is type-only and the brief rules out stock photos; the topic map is the single authored visual.

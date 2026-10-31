@@ -262,6 +262,14 @@ p {
   display: flex;
   gap: clamp(10px, 2.6vw, 36px);
 }
+.wordmark {
+  white-space: nowrap;
+}
+@media (max-width: 420px) {
+  .site-header .nav-optional {
+    display: none;
+  }
+}
 .site-header a {
   display: inline-flex;
   align-items: center;
@@ -582,6 +590,51 @@ p {
 }
 
 /* Studied: the full list, one area per line with its topics beside it */
+.projects {
+  padding: var(--chapter) var(--margin);
+  background: var(--raised);
+}
+.projects h2 {
+  margin-bottom: var(--head-gap);
+}
+.project {
+  display: grid;
+  gap: clamp(28px, 3.4vw, 48px);
+}
+.project-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--gap);
+  row-gap: 8px;
+}
+.project-summary {
+  max-width: 34ch;
+}
+.project-details {
+  display: grid;
+  gap: clamp(28px, 3.4vw, 48px);
+}
+/* Labels sit where the studied area names sit: Gambarino at lead size. */
+.project-label {
+  grid-column: 1 / 6;
+  font-family: var(--display);
+  font-size: var(--t-lead);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-sub);
+}
+.project-details dd {
+  margin: 0;
+}
+.project-learned {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.project-link {
+  margin-left: calc((100% + var(--gap)) * 5 / 12);
+}
+
 .studied {
   padding: var(--chapter) var(--margin);
   background: var(--ground);
@@ -818,8 +871,12 @@ html:not(.js) .focus-detail {
   .studied-topics {
     grid-column: 1;
   }
-  .studied-note {
+  .studied-note,
+  .project-link {
     margin-left: 0;
+  }
+  .project-label {
+    grid-column: 1;
   }
   .hero {
     min-height: 0;
