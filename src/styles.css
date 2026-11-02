@@ -717,20 +717,19 @@ p {
   }
 }
 
-/* One project: one wide card, picture left and words right, so the row is filled rather than half empty. */
-.work-grid[data-count='1'] {
-  grid-template-columns: 1fr;
-}
-.work-grid[data-count='1'] .work-card {
+/* One project, or the odd one out in the last row: one wide card, picture left and words right, so the row is
+   filled rather than half empty. */
+.work-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: none;
 }
-.work-grid[data-count='1'] .work-card-media {
+.work-card:last-child:nth-child(odd) .work-card-media {
   grid-column: 1 / 8;
   aspect-ratio: auto;
   min-height: clamp(420px, 44vw, 640px);
 }
-.work-grid[data-count='1'] .work-card-text {
+.work-card:last-child:nth-child(odd) .work-card-text {
   grid-column: 8 / 13;
   align-content: end;
 }
@@ -1217,17 +1216,14 @@ html:not(.js) .focus-detail {
   }
   /* Cards stack: picture above words, for one project or several. */
   .work-grid,
-  .work-grid[data-count='1'] {
+  .work-card:last-child:nth-child(odd) {
     grid-template-columns: 1fr;
   }
-  .work-grid[data-count='1'] .work-card {
-    grid-template-columns: 1fr;
-  }
-  .work-grid[data-count='1'] .work-card-media,
-  .work-grid[data-count='1'] .work-card-text {
+  .work-card:last-child:nth-child(odd) .work-card-media,
+  .work-card:last-child:nth-child(odd) .work-card-text {
     grid-column: 1;
   }
-  .work-grid[data-count='1'] .work-card-media {
+  .work-card:last-child:nth-child(odd) .work-card-media {
     min-height: 0;
     aspect-ratio: 4 / 3;
   }

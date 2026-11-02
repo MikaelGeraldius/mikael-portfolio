@@ -68,7 +68,7 @@ export const studied: StudyArea[] = [
     area: 'UI design',
     topics: 'Visual hierarchy, spacing grids, colour systems and theming, icon design, data visualisation, accessible interactive UI',
   },
-  { area: 'Game development', topics: 'Unity, C#' },
+  { area: 'Game development', topics: 'Unity, C#, a canvas game loop in React, tile maps and collisions' },
   { area: 'AI assistants', topics: 'Claude, Claude Code, ChatGPT, Gemini, Hermes' },
 ]
 
@@ -168,6 +168,45 @@ export const projects: Project[] = [
     ],
     shotsCaption: 'Screens from the app on my phone, shown with sample places.',
   },
+  // A final project built with Nadine Kay Ludony in June 2025 (both in the repo's history); Mikael rebuilt the HUD
+  // for phones and rewrote the snake mini game in Nov 2026. Rules and numbers come from the game's code.
+  {
+    slug: 'wemen',
+    name: 'Wemen',
+    kind: 'Course project',
+    year: '2025',
+    platform: 'Web',
+    meta: 'Final project · 2025 · Web',
+    blurb: 'A pixel-art life sim in the browser: keep yourself fed, rested, clean and happy for ten days in a small town.',
+    summary:
+      'A pixel-art life sim in the browser: pick a character, walk around a small town, and keep your energy, hunger, hygiene and mood above zero for ten days while collecting as many coins as you can.',
+    credit:
+      'I made it with Nadine Kay Ludony as our final project at Universitas Multimedia Nusantara. In 2026 I came back to it, rebuilt the interface so it plays on a phone, and rewrote the snake mini game.',
+    does:
+      'Every in-game hour wears the four stats down, and reaching zero in any of them ends the game. Walking up to a spot offers what it is for: sleep at home after 20:00, take a bath, buy bread, chicken, steak or an energy drink, or pay 50 coins to play snake, which earns 10 coins an apple and lifts your mood. The town turns to night after dark, a fast-forward button speeds up time and the drain with it, and the final score counts the days you lasted and the coins you kept.',
+    learned: [
+      'A game loop inside React: the town is drawn on a canvas every animation frame, with the player’s position kept in refs so walking doesn’t re-render the page, and movement scaled by frame time so the speed holds on any screen.',
+      'Tile maps: walls and action spots are one grid of tile codes, so finding the bath, the shop or the bed is a check of the player’s box against those tiles.',
+      'Game state with a reducer: time, stats and coins change only through actions such as sleeping, eating and playing snake, which keeps the rules in one place.',
+      'Day and night: the clock picks the day or the night map, and the rules follow it, so the bed only works after 20:00.',
+      'Playing on a phone: moving the HUD out of the canvas into the page, with on-screen arrows for walking and swipes for snake, made the game work on a touchscreen.',
+      'A snake that speeds up: each apple shortens the step from 140 ms toward a 65 ms cap, and the best score stays in the browser’s local storage.',
+    ],
+    stack: 'JavaScript, React, Vite, HTML Canvas, CSS, GitHub Pages',
+    repo: 'https://github.com/MikaelGeraldius/UAS-WEMEN',
+    site: 'https://mikaelgeraldius.github.io/UAS-WEMEN/',
+    frame: 'screen',
+    // Captured from the live game at 1440x900 in headless Chrome.
+    shots: [
+      { src: shot('wemen-home.webp'), alt: 'The title screen: the Wemen logo over a pixel-art village, a character to pick, a name box and a Start button', width: 1440, height: 900 },
+      { src: shot('wemen-town.webp'), alt: 'The town: the player by the snake house with a Play button, the day, time and coins top left and four stat bars top right', width: 1440, height: 900 },
+      { src: shot('wemen-eat.webp'), alt: 'The shop: a menu of bread, chicken, steak and an energy drink, each with its price and what it restores', width: 1440, height: 900 },
+      { src: shot('wemen-snake.webp'), alt: 'The snake mini game over the dimmed town, with an apple and coin counter and the best score', width: 1440, height: 900 },
+      { src: shot('wemen-night.webp'), alt: 'The town at night: the house windows lit, the clock at 20:24 and a Sleep button by the door', width: 1440, height: 900 },
+      { src: shot('wemen-over.webp'), alt: 'Game over: hunger, energy and mood at zero, a final score of 700 for two days and 100 coins, and a Restart button', width: 1440, height: 900 },
+    ],
+    shotsCaption: 'The live game: the title screen, the town, the shop, snake, night at home, and game over.',
+  },
 ]
 
 export type GroupId = 'all' | 'ai' | 'web' | 'other'
@@ -260,7 +299,7 @@ export const topicNodes: TopicNode[] = [
     group: 'other',
     kind: 'topic',
     parent: 'informatics',
-    text: 'Games, studied with Unity and C#.',
+    text: 'Games, studied with Unity and C#. Wemen is a pixel-art life sim drawn on a canvas in React, with tile-map collisions and a snake mini game.',
   },
   {
     id: 'audio',
@@ -309,7 +348,7 @@ export const topicNodes: TopicNode[] = [
   { id: 'html', label: 'HTML', group: 'web', kind: 'topic', parent: 'web', text: 'The structure of a web page. Studied as part of the frontend.' },
   { id: 'js', label: 'JavaScript', group: 'web', kind: 'topic', parent: 'web', text: 'The language of the browser. Studied as part of the frontend.' },
   { id: 'ts', label: 'TypeScript', group: 'web', kind: 'topic', parent: 'web', text: 'JavaScript with types. Studied as part of the frontend.' },
-  { id: 'react', label: 'React', group: 'web', kind: 'topic', parent: 'web', text: 'Components for building interfaces. Studied as part of the frontend.' },
+  { id: 'react', label: 'React', group: 'web', kind: 'topic', parent: 'web', text: 'Components for building interfaces. Studied as part of the frontend, and used for Wemen and the song mood classifier.' },
   { id: 'tailwind', label: 'Tailwind CSS', group: 'web', kind: 'topic', parent: 'web', text: 'Utility-first styling. Studied as part of the frontend.' },
   { id: 'vite', label: 'Vite', group: 'web', kind: 'topic', parent: 'web', text: 'The build tool behind this site and the song mood classifier.' },
   {
