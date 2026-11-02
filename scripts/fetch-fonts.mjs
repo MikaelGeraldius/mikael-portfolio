@@ -21,10 +21,17 @@ if (missing.length === 0) {
   process.exit(0)
 }
 
-const css = await fetch('https://api.fontshare.com/v2/css?f[]=gambarino@400&f[]=general-sans@400,500').then((r) => {
-  if (!r.ok) throw new Error(`Fontshare CSS: HTTP ${r.status}`)
-  return r.text()
-})
+// One request per family: since Nov 2026 Fontshare answers a combined request with the first family only.
+const families = ['gambarino@400', 'general-sans@400,500']
+const sheets = await Promise.all(
+  families.map((f) =>
+    fetch(`https://api.fontshare.com/v2/css?f[]=${f}`).then((r) => {
+      if (!r.ok) throw new Error(`Fontshare CSS for ${f}: HTTP ${r.status}`)
+      return r.text()
+    }),
+  ),
+)
+const css = sheets.join('\n')
 // One @font-face block per family and weight; take its woff2 source.
 const faces = [...css.matchAll(/@font-face\s*{([^}]*)}/g)].map(([, body]) => ({
   family: body.match(/font-family:\s*'([^']+)'/)?.[1],
