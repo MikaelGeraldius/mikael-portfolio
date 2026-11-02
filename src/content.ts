@@ -1,7 +1,6 @@
 // Single source of truth for every fact shown on the page.
-// Only details confirmed by Mikael live here. The one project is RegionMusic,
-// which he built and published; there are no employers, certificates, social
-// profiles or CV, so none are listed.
+// Only details confirmed by Mikael live here: his own and group projects he built,
+// and no employers, certificates, social profiles or CV, so none are listed.
 
 export const person = {
   name: 'Mikael Geraldius Gunawan',
@@ -48,15 +47,15 @@ export interface StudyArea {
 
 export const studied: StudyArea[] = [
   { area: 'Frontend', topics: 'HTML, JavaScript, TypeScript, React, Tailwind CSS, Vite, Web Audio API' },
-  { area: 'Backend', topics: 'MySQL, PostgreSQL, ExpressJS, Cloudflare Workers, calling third-party APIs through a proxy' },
+  { area: 'Backend', topics: 'MySQL, PostgreSQL, ExpressJS, Supabase with Row Level Security and Edge Functions, Cloudflare Workers, calling third-party APIs through a proxy' },
   {
     area: 'Mobile',
-    topics: 'Kotlin, Room, React Native, Expo, Android permissions, background location, standalone release builds',
+    topics: 'Kotlin, Room, Flutter, Dart, React Native, Expo, Android permissions, background location, push notifications, standalone release builds',
   },
   {
     area: 'Machine learning',
     topics:
-      'Methods implemented in Python, pandas, scikit-learn, Random Forests, evaluation against baselines, shrinking a model to run in the browser',
+      'Methods implemented in Python, pandas, scikit-learn, Random Forests, evaluation against baselines, shrinking a model to run in the browser, turning free text into checked categories with Gemini',
   },
   {
     area: 'Audio and playback',
@@ -66,7 +65,7 @@ export const studied: StudyArea[] = [
   { area: 'Maps and location', topics: 'OpenStreetMap data, point-in-polygon tests, smoothing GPS jitter' },
   {
     area: 'UI design',
-    topics: 'Visual hierarchy, spacing grids, colour systems and theming, icon design, data visualisation, accessible interactive UI',
+    topics: 'Visual hierarchy, spacing grids, colour systems and theming, icon design, data visualisation, accessible interactive UI, app screens in Figma',
   },
   { area: 'Game development', topics: 'Unity, C#, a canvas game loop in React, tile maps and collisions' },
   { area: 'AI assistants', topics: 'Claude, Claude Code, ChatGPT, Gemini, Hermes' },
@@ -135,6 +134,43 @@ export const projects: Project[] = [
       { src: shot('mood-classifier-results.webp'), alt: 'The results: 92.3% for the full model beside 91.3%, 83.5% and 38.3% for the page’s model and two baselines', width: 1440, height: 900 },
     ],
     shotsCaption: 'The live page: the opening, checking a song, and how often it is right.',
+  },
+  // A team entry for the healthcare theme of the JOINTS UGM 2026 hackathon (submitted Oct 2026); Mikael worked on
+  // both the Figma design and the app. Facts and numbers come from the repository's README and docs; the shots are
+  // the team's Figma screens from docs/figma, cropped to one phone screen each.
+  {
+    slug: 'rela',
+    name: 'ReLa',
+    kind: 'Hackathon project',
+    year: '2026',
+    platform: 'Android',
+    meta: 'JOINTS UGM 2026 hackathon · 2026 · Android',
+    blurb: 'An Android app that sends a community volunteer to an older parent living alone, and turns each visit into news the family can follow.',
+    summary:
+      'An Android app that links families who live far away with community volunteers through local foundations, so an older parent living alone gets a regular visitor, and the family sees the slow changes a phone call misses.',
+    credit:
+      'We built it as a team for the healthcare theme of the JOINTS UGM 2026 hackathon. I worked on both sides of it: designing the screens in Figma and building the app.',
+    does:
+      'A family registers their parent, and the app proposes a volunteer by the skills needed, then distance, then how many people they already visit; the foundation checks the family’s documents before visits start. After each visit the volunteer answers seven open questions, typed or dictated, and Gemini sorts the story into seven areas, from appetite and medicine to memory and mood, each with the sentence it came from. The volunteer checks and corrects that before saving, rules compare it with the person’s own usual pattern, and the family sees a status and a trend for each area. An Emergency button alerts the family and the foundation with the location, beside a health profile to read out on a simulated call to 119.',
+    learned: [
+      'One app for three roles: a family, a volunteer and a foundation each get their own screens and see only what their role needs, enforced by Row Level Security in the database rather than in the app.',
+      'AI output is untrusted input: the model’s answer is checked against a schema, levels outside 0 to 3 are dropped, and any evidence sentence that is not really in the story is thrown out. Names and addresses are removed before the story is sent.',
+      'A person checks before anything is saved: the volunteer reviews and corrects the summary, and withdrawing a danger sign needs a reason the family and the foundation can see.',
+      'Slow decline needs a baseline: each person’s usual level in every area comes from their first three confirmed visits, and the status rises on a two-step drop, three worse visits in a row, or medicine missed in two visits of three.',
+      'Numbers with their limits: on 35 stories the team wrote, the extraction got 217 of 245 areas right (88.6%) and caught all 18 danger signs, with 10 false alarms for the volunteer to clear. It measures reading the story, not health.',
+      'Testing as an attacker: a script makes 61 attacks through the API as an ordinary user, from faking a visit to silencing an alarm, and every one of them has to fail.',
+    ],
+    stack: 'Flutter, Dart, Supabase, PostgreSQL, Edge Functions in TypeScript, Google Gemini, Firebase Cloud Messaging, OpenStreetMap, Figma',
+    repo: 'https://github.com/AltoDevv/rela-submission',
+    site: 'https://github.com/AltoDevv/rela-submission/releases/latest',
+    frame: 'phone',
+    shots: [
+      { src: shot('rela-family.webp'), alt: 'The family’s home screen: two parents, one Stable and one Needs attention, each with their volunteer, foundation and last visit', width: 540, height: 1169 },
+      { src: shot('rela-story.webp'), alt: 'A volunteer’s visit story: seven open questions on eating, medicine, moving, daily tasks, memory, mood and general health, each answered in plain words', width: 540, height: 1169 },
+      { src: shot('rela-summary.webp'), alt: 'The summary to check: each area with its level and the quoted sentence it came from, such as “only ate three spoons of porridge”', width: 540, height: 1169 },
+      { src: shot('rela-foundation.webp'), alt: 'The foundation’s week: 27 visits, 12 active volunteers, 24 people accompanied, volunteers waiting for checks, and missed visits', width: 540, height: 1169 },
+    ],
+    shotsCaption: 'The team’s designs in Figma: the family’s home, a volunteer’s visit story, the summary to check, and the foundation’s week.',
   },
   // Built Oct 2026; code public at the repo below. The music itself is Mikael's own
   // files and is not in the repository, so the page names no soundtrack.
@@ -283,7 +319,7 @@ export const topicNodes: TopicNode[] = [
     group: 'other',
     kind: 'topic',
     parent: 'informatics',
-    text: 'Databases and servers, studied with MySQL, PostgreSQL and ExpressJS. A Cloudflare Worker proxies the song mood classifier’s requests.',
+    text: 'Databases and servers, studied with MySQL, PostgreSQL and ExpressJS. ReLa runs on Supabase with its access rules in the database, and a Cloudflare Worker proxies the song mood classifier’s requests.',
   },
   {
     id: 'mobile',
@@ -291,7 +327,7 @@ export const topicNodes: TopicNode[] = [
     group: 'other',
     kind: 'topic',
     parent: 'informatics',
-    text: 'Android apps, studied with Kotlin and Room. RegionMusic is built with React Native and Expo, with background location and release builds.',
+    text: 'Android apps, studied with Kotlin and Room. RegionMusic is built with React Native and Expo, with background location and release builds, and ReLa with Flutter.',
   },
   {
     id: 'game',
@@ -343,7 +379,7 @@ export const topicNodes: TopicNode[] = [
   },
   { id: 'claude', label: 'Claude', group: 'ai', kind: 'topic', parent: 'ai', text: 'One of the AI assistants I use every day. I built RegionMusic with Claude Code.' },
   { id: 'chatgpt', label: 'ChatGPT', group: 'ai', kind: 'topic', parent: 'ai', text: 'One of the AI assistants I use every day.' },
-  { id: 'gemini', label: 'Gemini', group: 'ai', kind: 'topic', parent: 'ai', text: 'One of the AI assistants I use every day.' },
+  { id: 'gemini', label: 'Gemini', group: 'ai', kind: 'topic', parent: 'ai', text: 'One of the AI assistants I use every day. In ReLa it sorts a volunteer’s visit story into seven areas, each with the sentence it came from.' },
   { id: 'hermes', label: 'Hermes', group: 'ai', kind: 'topic', parent: 'ai', text: 'One of the AI assistants I use every day.' },
   { id: 'html', label: 'HTML', group: 'web', kind: 'topic', parent: 'web', text: 'The structure of a web page. Studied as part of the frontend.' },
   { id: 'js', label: 'JavaScript', group: 'web', kind: 'topic', parent: 'web', text: 'The language of the browser. Studied as part of the frontend.' },

@@ -859,10 +859,14 @@ html.case-open {
 }
 .case-media img {
   display: block;
+  /* Up to four phones share the row, shrinking together rather than running off the panel. */
+  flex: 0 1 min(40%, 340px);
+  min-width: 0;
   width: min(40%, 340px);
   height: auto;
 }
-.case-media img + img {
+/* Every second phone sits lower, so a row of screens steps like phones laid on a table. */
+.case-media img:nth-child(even) {
   margin-top: clamp(32px, 6vw, 96px);
 }
 /* Web pages stack, one full screen after another. */
@@ -871,10 +875,11 @@ html.case-open {
   align-items: center;
 }
 .case-media[data-frame='screen'] img {
+  flex: none;
   width: 100%;
   max-width: 1120px;
 }
-.case-media[data-frame='screen'] img + img {
+.case-media[data-frame='screen'] img:nth-child(even) {
   margin-top: 0;
 }
 /* Each part is a heading with its content directly beneath, laid across the full width. */
@@ -1271,7 +1276,13 @@ html:not(.js) .focus-detail {
   .case-learned {
     grid-template-columns: 1fr;
   }
+  /* Two phones to a row; a third and fourth start a second row. */
+  .case-media {
+    flex-wrap: wrap;
+    row-gap: 24px;
+  }
   .case-media img {
+    flex-basis: 46%;
     width: 46%;
   }
   .hero {

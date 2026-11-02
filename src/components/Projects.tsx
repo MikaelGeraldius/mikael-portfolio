@@ -24,9 +24,9 @@ export default function Projects() {
       <ul className="work-grid" data-count={projects.length}>
         {projects.map((project) => (
           <li className="work-card" key={project.slug}>
-            {/* Phones show both screens side by side; a web page shows its opening screen. */}
+            {/* Phones show their first two screens side by side; a web page shows its opening screen. */}
             <div className="work-card-media reveal" data-reveal data-card-media={project.slug} data-frame={project.frame}>
-              {(project.frame === 'phone' ? project.shots : project.shots.slice(0, 1)).map((shot) => (
+              {project.shots.slice(0, project.frame === 'phone' ? 2 : 1).map((shot) => (
                 <img key={shot.src} src={shot.src} alt="" width={shot.width} height={shot.height} loading="lazy" decoding="async" />
               ))}
             </div>
