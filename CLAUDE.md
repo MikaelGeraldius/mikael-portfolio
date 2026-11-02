@@ -45,6 +45,10 @@ eyebrow, only 2 pictures, a long Education statement, and uneven margins at 1440
 - **Motion:** transform and opacity only; ease-out curves from `:root` (`--ease-out`, `--ease-expo`); hover effects
   behind `@media (hover: hover) and (pointer: fine)`; everything has a reduced-motion version and reads without JS
   (the page is prerendered by `scripts/prerender.mjs`). Scroll reveals use `class="reveal" data-reveal`.
+- **Smooth scroll everywhere:** anything that scrolls, the page or a box that scrolls on its own, glides with
+  Lenis at the same settings (`lerp: 0.09`). The page uses `useSmoothScroll`; a box that scrolls itself, like a
+  project page, uses `smoothScrollWithin(el)` from `src/hooks.ts` (and keeps `data-lenis-prevent` so the page's
+  instance leaves it alone). Never add a scrolling area without it; off under reduced motion.
 
 ## Work section and project pages
 

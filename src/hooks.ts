@@ -2,6 +2,8 @@ import Lenis from 'lenis'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { anchorDuration, anchorTarget, clamp, easeOutExpo } from './scroll'
 
+const reducedQuery = '(prefers-reduced-motion: reduce)'
+
 /** The running smooth-scroll instance, shared so in-page links glide on the same engine as the wheel. */
 let lenis: Lenis | null = null
 
@@ -21,13 +23,21 @@ export function useSmoothScroll(reduced: boolean) {
   }, [reduced])
 }
 
+/**
+ * The same smooth scrolling inside a box that scrolls on its own, such as an open project page. Returns the
+ * cleanup. Nothing under reduced motion.
+ */
+export function smoothScrollWithin(wrapper: HTMLElement): () => void {
+  if (window.matchMedia(reducedQuery).matches) return () => {}
+  const instance = new Lenis({ wrapper, content: wrapper, lerp: 0.09, wheelMultiplier: 1, autoRaf: true })
+  return () => instance.destroy()
+}
+
 /** Holds the page still while a project page lies over it, and lets it go again. */
 export function setSmoothScrollPaused(paused: boolean) {
   if (paused) lenis?.stop()
   else lenis?.start()
 }
-
-const reducedQuery ='(prefers-reduced-motion: reduce)'
 
 function subscribeReduced(callback: () => void) {
   const mq = window.matchMedia(reducedQuery)

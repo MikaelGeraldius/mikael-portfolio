@@ -1,6 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from 'react'
 import { projects, type Project } from '../content'
-import { setSmoothScrollPaused } from '../hooks'
+import { setSmoothScrollPaused, smoothScrollWithin } from '../hooks'
 import { closeProject, openProject, projectHref, useOpenProject } from '../route'
 import Arrow from './Arrow'
 
@@ -46,11 +46,16 @@ export default function ProjectPages() {
     const page = document.querySelector<HTMLElement>(`.case[data-slug="${open}"]`)
     if (page) page.scrollTop = 0
     page?.querySelector<HTMLElement>('.case-title')?.focus({ preventScroll: true })
+    // The page scrolls inside itself, so it gets its own smooth scrolling while the site's is paused.
+    const releaseScroll = page ? smoothScrollWithin(page) : () => {}
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') closeProject(open)
     }
     document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      releaseScroll()
+    }
   }, [open])
 
   return (
