@@ -135,8 +135,8 @@ export const projects: Project[] = [
     ],
     shotsCaption: 'The live page: the opening, checking a song, and how often it is right.',
   },
-  // A team entry for the healthcare theme of the JOINTS UGM 2026 hackathon (submitted Oct 2026); Mikael worked on
-  // both the Figma design and the app. Facts and numbers come from the repository's README and docs; the shots are
+  // A team entry for the healthcare theme of the JOINTS UGM 2026 hackathon (submitted Oct 2026) by Alto Dev, Gerald
+  // Fedorian, Mikael and Nadine Kay Ludony; all four designed and coded the app. Facts and numbers come from the repository's README and docs; the shots are
   // the team's Figma screens from docs/figma, cropped to one phone screen each.
   {
     slug: 'rela',
@@ -149,7 +149,7 @@ export const projects: Project[] = [
     summary:
       'An Android app that links families who live far away with community volunteers through local foundations, so an older parent living alone gets a regular visitor, and the family sees the slow changes a phone call misses.',
     credit:
-      'We built it as a team for the healthcare theme of the JOINTS UGM 2026 hackathon. I worked on both sides of it: designing the screens in Figma and building the app.',
+      'We built it for the healthcare theme of the JOINTS UGM 2026 hackathon as a team of four: Alto Dev, Gerald Fedorian, Mikael Geraldius Gunawan and Nadine Kay Ludony. All of us designed and coded the app; my part covered both, from the screens in Figma to the app itself.',
     does:
       'A family registers their parent, and the app proposes a volunteer by the skills needed, then distance, then how many people they already visit; the foundation checks the family’s documents before visits start. After each visit the volunteer answers seven open questions, typed or dictated, and Gemini sorts the story into seven areas, from appetite and medicine to memory and mood, each with the sentence it came from. The volunteer checks and corrects that before saving, rules compare it with the person’s own usual pattern, and the family sees a status and a trend for each area. An Emergency button alerts the family and the foundation with the location, beside a health profile to read out on a simulated call to 119.',
     learned: [
