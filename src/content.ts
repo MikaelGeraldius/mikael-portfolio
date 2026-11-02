@@ -46,8 +46,8 @@ export interface StudyArea {
 }
 
 export const studied: StudyArea[] = [
-  { area: 'Frontend', topics: 'HTML, JavaScript, TypeScript, React, Tailwind CSS, Vite, Web Audio API' },
-  { area: 'Backend', topics: 'MySQL, PostgreSQL, ExpressJS, Supabase with Row Level Security and Edge Functions, Cloudflare Workers, calling third-party APIs through a proxy' },
+  { area: 'Frontend', topics: 'HTML, JavaScript, TypeScript, React, Inertia.js, Tailwind CSS, Vite, Web Audio API' },
+  { area: 'Backend', topics: 'MySQL, PostgreSQL, ExpressJS, Laravel with PHP, Supabase with Row Level Security and Edge Functions, Cloudflare Workers, calling third-party APIs through a proxy' },
   {
     area: 'Mobile',
     topics: 'Kotlin, Room, Flutter, Dart, React Native, Expo, Android permissions, background location, push notifications, standalone release builds',
@@ -204,6 +204,46 @@ export const projects: Project[] = [
     ],
     shotsCaption: 'Screens from the app on my phone, shown with sample places.',
   },
+  // The festival's website, built by its Portal and Pixels division in April 2026 (AltoDevv/umnfestival-2026, forked
+  // to Mikael's account). Mikael's commits are the lower half of the Event page: the event cards, the countdown and
+  // the introduction section. Facts come from the code and the live site; shots were captured from umnfestival.com.
+  {
+    slug: 'umn-festival',
+    name: 'UMN Festival 2026',
+    kind: 'Team project',
+    year: '2026',
+    platform: 'Web',
+    meta: 'Festival website · 2026 · Web',
+    blurb: 'The website of my university’s yearly festival: its events, countdowns, line-up and tickets, set in one illustrated city.',
+    summary:
+      'The website of UMN Festival 2026, the yearly student festival at Universitas Multimedia Nusantara, from the Unveiling run that opens it to the Unify concert that closes it: the events, countdowns, the guest-star line-up and ticket sales.',
+    credit:
+      'Built by the festival’s Portal and Pixels division: Alto Dev, Brandon Treviso, Christian Surya, Ivander Nathanael K., Joshua Ivander Hartawan, Mikael Geraldius Gunawan, Nadine Kay Ludony, Ryan Fernando Lim and Sean Antonio. My part was the lower half of the Event page: the event cards, the countdown and the introduction section.',
+    does:
+      'The home page announces the next event, counts down to it and keeps the trailer and aftermovie in its archive. The Event page lays the four events, Unveiling, Ulympic, U-Care and Unify, around a map of the festival, then gives each its own card, with events not yet announced kept behind a locked cover. The Ticket page sells the Unveiling run’s 2.5 km and 5 km entries, bundles and Unify concert tickets through Midtrans, and an admin panel lets the committee manage orders, ticket types, codes, guest stars and countdowns, and scan tickets at the door.',
+    learned: [
+      'Content the committee can change: the event cards and countdowns read from the site’s API, so the committee updates them in the admin panel, and the cards fall back to built-in ones when the API does not answer.',
+      'A countdown is a clock against a date: the time left is the event’s date minus now, recounted every second, and when one event reaches zero the next one takes its place.',
+      'Locked until announced: an event that is not public yet shows a locked cover in place of its card, and opens when the committee unlocks it.',
+      'Building a scene from the designers’ art: clouds, a skyline, traffic lights and crystals are separate SVG and PNG layers placed in viewport units, so the illustrated city holds together at every width.',
+      'Laravel with React through Inertia: each server route names a React page to render, and the page components fetch live data such as events and countdowns from the API.',
+      'Nine people in one repository: each page on its own branch, merged through pull requests, with merge conflicts resolved along the way.',
+    ],
+    stack: 'React, Inertia.js, Laravel, PHP, Tailwind CSS, Vite, Framer Motion, Midtrans',
+    repo: 'https://github.com/MikaelGeraldius/umnfestival-2026',
+    site: 'https://umnfestival.com/',
+    frame: 'screen',
+    // Captured from the live site at 1440x900 with reduced motion, so every animation had settled.
+    shots: [
+      { src: shot('umnfestival-event-map.webp'), alt: 'The Event page’s map: a glowing “UMN Festival 2026” orb ringed by the events’ crystal emblems, U-Care and Ulympic among them, against a night sky', width: 1440, height: 900 },
+      { src: shot('umnfestival-home-top.webp'), alt: 'The home page: a lit sign reading “UMN Festival 2026, Ready to unravel, cross the infinite possibilities” over the next event, U-Care at KidZania Pacific Place on 26 September 2026', width: 1440, height: 900 },
+      { src: shot('umnfestival-event-countdown.webp'), alt: 'The countdown to U-Care 2026: days, hours, minutes and seconds in a capsule above a dark city skyline', width: 1440, height: 900 },
+      { src: shot('umnfestival-event-cards.webp'), alt: 'The Unveiling 2026 event card: its crystal emblem beside a description of the opening event and a “Learn more” button, with a locked card below', width: 1440, height: 900 },
+      { src: shot('umnfestival-event-more.webp'), alt: 'The introduction section: a card inviting teams to register for Ulympic 2026, beside the Ulympic emblem', width: 1440, height: 900 },
+      { src: shot('umnfestival-ticket-unveiling.webp'), alt: 'Unveiling 2026 tickets: 2.5 km early-bird and regular entries from IDR 100,000 and IDR 125,000, both sold out', width: 1440, height: 900 },
+    ],
+    shotsCaption: 'The live site: the Event page’s map, the home page, the countdown, the event cards, the introduction, and Unveiling tickets.',
+  },
   // A final project built with Nadine Kay Ludony in June 2025 (both in the repo's history); Mikael rebuilt the HUD
   // for phones and rewrote the snake mini game in Nov 2026. Rules and numbers come from the game's code.
   {
@@ -319,7 +359,7 @@ export const topicNodes: TopicNode[] = [
     group: 'other',
     kind: 'topic',
     parent: 'informatics',
-    text: 'Databases and servers, studied with MySQL, PostgreSQL and ExpressJS. ReLa runs on Supabase with its access rules in the database, and a Cloudflare Worker proxies the song mood classifier’s requests.',
+    text: 'Databases and servers, studied with MySQL, PostgreSQL and ExpressJS. The UMN Festival 2026 website runs on Laravel, ReLa on Supabase with its access rules in the database, and a Cloudflare Worker proxies the song mood classifier’s requests.',
   },
   {
     id: 'mobile',
@@ -384,8 +424,8 @@ export const topicNodes: TopicNode[] = [
   { id: 'html', label: 'HTML', group: 'web', kind: 'topic', parent: 'web', text: 'The structure of a web page. Studied as part of the frontend.' },
   { id: 'js', label: 'JavaScript', group: 'web', kind: 'topic', parent: 'web', text: 'The language of the browser. Studied as part of the frontend.' },
   { id: 'ts', label: 'TypeScript', group: 'web', kind: 'topic', parent: 'web', text: 'JavaScript with types. Studied as part of the frontend.' },
-  { id: 'react', label: 'React', group: 'web', kind: 'topic', parent: 'web', text: 'Components for building interfaces. Studied as part of the frontend, and used for Wemen and the song mood classifier.' },
-  { id: 'tailwind', label: 'Tailwind CSS', group: 'web', kind: 'topic', parent: 'web', text: 'Utility-first styling. Studied as part of the frontend.' },
+  { id: 'react', label: 'React', group: 'web', kind: 'topic', parent: 'web', text: 'Components for building interfaces. Studied as part of the frontend, and used for Wemen, the song mood classifier and the UMN Festival 2026 website.' },
+  { id: 'tailwind', label: 'Tailwind CSS', group: 'web', kind: 'topic', parent: 'web', text: 'Utility-first styling. Studied as part of the frontend, and used for the UMN Festival 2026 website.' },
   { id: 'vite', label: 'Vite', group: 'web', kind: 'topic', parent: 'web', text: 'The build tool behind this site and the song mood classifier.' },
   {
     id: 'webaudio',

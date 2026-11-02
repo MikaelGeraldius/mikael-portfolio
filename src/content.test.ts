@@ -22,11 +22,12 @@ describe('confirmed facts', () => {
   })
 
   it('shows only the confirmed projects, linked to their real repositories', () => {
-    expect(projects.map((p) => p.name)).toEqual(['Song mood classifier', 'ReLa', 'RegionMusic', 'Wemen'])
+    expect(projects.map((p) => p.name)).toEqual(['Song mood classifier', 'ReLa', 'RegionMusic', 'UMN Festival 2026', 'Wemen'])
     expect(projects.map((p) => p.repo)).toEqual([
       'https://github.com/MikaelGeraldius/mood-classifier',
       'https://github.com/AltoDevv/rela-submission',
       'https://github.com/MikaelGeraldius/RegionMusic',
+      'https://github.com/MikaelGeraldius/umnfestival-2026',
       'https://github.com/MikaelGeraldius/UAS-WEMEN',
     ])
     expect(new Set(projects.map((p) => p.slug)).size).toBe(projects.length)
