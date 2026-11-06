@@ -1,6 +1,6 @@
 // Single source of truth for every fact shown on the page.
 // Only details confirmed by Mikael live here: his own and group projects he built,
-// and no employers, certificates, social profiles or CV, so none are listed.
+// and no employers, certificates or social profiles, so none are listed. The CV is a download in the header.
 
 export const person = {
   name: 'Mikael Geraldius Gunawan',
@@ -21,6 +21,10 @@ export const contact = {
 }
 
 export const mailtoHref = `mailto:${contact.email}?subject=${encodeURIComponent(contact.emailSubject)}`
+
+// The public copy of the CV in public/: the same content as the vault's CV, without the phone number.
+export const cvFile = 'Mikael_Geraldius_Gunawan_CV.pdf'
+export const cvHref = `${import.meta.env.BASE_URL}${cvFile}`
 
 /** The first-screen sentence in phrases; `mark` phrases are the two focus areas. */
 export const heroParts: readonly { text: string; mark?: true }[] = [

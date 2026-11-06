@@ -265,11 +265,6 @@ p {
 .wordmark {
   white-space: nowrap;
 }
-@media (max-width: 420px) {
-  .site-header .nav-optional {
-    display: none;
-  }
-}
 .site-header a {
   display: inline-flex;
   align-items: center;
@@ -290,6 +285,133 @@ p {
   text-decoration-color: var(--accent);
   text-decoration-thickness: 2px;
   text-underline-offset: 0.35em;
+}
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2.6vw, 36px);
+}
+/* The header's one action: the standard button, sized down to sit in the bar. */
+.site-header a.header-resume {
+  padding: 0 16px;
+  font-size: var(--t-small);
+  white-space: nowrap;
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-header a.header-resume:hover {
+    text-decoration: none;
+  }
+}
+/* Phones: the section links fold into a menu. Press feedback matches the buttons: scale(0.97) in 160ms. */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 44px;
+  height: 44px;
+  margin-right: -11px; /* the bars, not the hit area, line up with the page margin */
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out);
+}
+.menu-toggle:active {
+  transform: scale(0.97);
+}
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  transition:
+    transform 200ms var(--ease-out),
+    opacity 200ms var(--ease-out),
+    background-color 160ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .menu-toggle:hover span {
+    background: var(--accent);
+  }
+}
+.menu-toggle:has(+ .site-menu:popover-open) span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.menu-toggle:has(+ .site-menu:popover-open) span:nth-child(2) {
+  opacity: 0;
+}
+.menu-toggle:has(+ .site-menu:popover-open) span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+/* A tone step from the bar it hangs under, so its edge reads without a line or a shadow. */
+.site-menu {
+  position: fixed;
+  inset: var(--header) 0 auto 0;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  max-height: calc(100dvh - var(--header));
+  margin: 0;
+  padding: 8px var(--margin) 16px;
+  overflow-y: auto;
+  background: var(--raised);
+  border: 0;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 150ms var(--ease-out),
+    transform 150ms var(--ease-out),
+    display 150ms allow-discrete,
+    overlay 150ms allow-discrete;
+}
+.site-header[data-header-tone='raised'] .site-menu {
+  background: var(--ground);
+}
+.site-menu:popover-open {
+  opacity: 1;
+  transform: none;
+  transition-duration: 200ms;
+}
+@starting-style {
+  .site-menu:popover-open {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+.site-menu ul {
+  flex-direction: column;
+  gap: 0;
+}
+/* The same type as the bar's links; a full-width row keeps the whole line tappable. */
+.site-header .site-menu a {
+  display: flex;
+}
+@media (max-width: 760px) {
+  .header-links {
+    display: none;
+  }
+  .menu-toggle {
+    display: inline-flex;
+  }
+}
+@media (min-width: 761px) {
+  .site-menu {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-toggle span {
+    transition: background-color 160ms var(--ease);
+  }
+  .site-menu,
+  .site-menu:popover-open {
+    transform: none;
+  }
 }
 
 /* Buttons and links */

@@ -39,6 +39,19 @@ describe('page markup', () => {
     expect(html).toContain('href="#projects"')
   })
 
+  it('offers the CV as a download from the header', () => {
+    expect(html).toMatch(/<a class="button header-resume" href="[^"]*Mikael_Geraldius_Gunawan_CV\.pdf" download="Mikael_Geraldius_Gunawan_CV\.pdf"/)
+  })
+
+  it('folds the section links into a menu that opens without script', () => {
+    expect(html).toMatch(/<button[^>]*popoverTarget="site-menu"/i)
+    expect(html).toMatch(/id="site-menu" popover="auto"/)
+    const menu = html.slice(html.indexOf('id="site-menu"'))
+    for (const href of ['#education', '#focus', '#projects', '#studied', '#contact']) {
+      expect(menu).toContain(`href="${href}"`)
+    }
+  })
+
   it('has real contact links and only the confirmed project', () => {
     expect(html).toContain('mailto:ops.gege.lie@gmail.com')
     expect(html).toContain('RegionMusic')
