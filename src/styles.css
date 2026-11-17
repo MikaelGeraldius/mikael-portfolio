@@ -971,38 +971,160 @@ html.case-open {
   display: grid;
   gap: 16px;
 }
+/* The screenshots: one large picture at a time on the deep panel, thumbnails beneath (src/components/Gallery.tsx). */
+.gallery {
+  display: grid;
+  gap: 12px;
+}
+.gallery-stage {
+  position: relative;
+}
 .case-media {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: clamp(16px, 4vw, 64px);
-  padding: clamp(32px, 6vw, 96px) var(--margin);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
   background: var(--deep);
 }
-.case-media img {
+.case-media::-webkit-scrollbar {
+  display: none;
+}
+.case-media:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+.gallery-slide {
+  flex: 0 0 100%;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 3vw, 40px) var(--margin);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+/* Short enough that the picture and its thumbnails share one screen. */
+.gallery-slide img {
   display: block;
-  /* Up to four phones share the row, shrinking together rather than running off the panel. */
-  flex: 0 1 min(40%, 340px);
-  min-width: 0;
-  width: min(40%, 340px);
+  width: auto;
+  max-width: min(100%, 1120px);
   height: auto;
+  max-height: min(64vh, 630px);
 }
-/* Every second phone sits lower, so a row of screens steps like phones laid on a table. */
-.case-media img:nth-child(even) {
-  margin-top: clamp(32px, 6vw, 96px);
+/* Phone screens keep their own shape: as tall as the panel allows, never wider than a phone. */
+.case-media[data-frame='phone'] .gallery-slide img {
+  height: min(64vh, 600px);
+  max-height: none;
+  object-fit: contain;
 }
-/* Web pages stack, one full screen after another. */
-.case-media[data-frame='screen'] {
-  flex-direction: column;
-  align-items: center;
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-top: -24px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--ground);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-out),
+    color 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
 }
-.case-media[data-frame='screen'] img {
-  flex: none;
-  width: 100%;
-  max-width: 1120px;
+.gallery-prev {
+  left: 0;
 }
-.case-media[data-frame='screen'] img:nth-child(even) {
-  margin-top: 0;
+.gallery-next {
+  right: 0;
+}
+.gallery-arrow:active {
+  transform: scale(0.97);
+}
+.gallery-arrow:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .gallery-arrow:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+.gallery-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 6px;
+}
+.gallery-thumbs::-webkit-scrollbar {
+  display: none;
+}
+.gallery-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--deep);
+  cursor: pointer;
+  opacity: 0.5;
+  transition:
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+.gallery-thumb img {
+  display: block;
+  width: clamp(104px, 12vw, 168px);
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+}
+.gallery[data-frame='phone'] .gallery-thumb img {
+  width: clamp(56px, 6vw, 80px);
+  aspect-ratio: 9 / 16;
+}
+/* The picture in view: full strength, with the accent bar beneath it. */
+.gallery-thumb::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 200ms var(--ease-out);
+}
+.gallery-thumb[aria-current='true'] {
+  opacity: 1;
+}
+.gallery-thumb[aria-current='true']::after {
+  transform: scaleX(1);
+}
+.gallery-thumb:active {
+  transform: scale(0.97);
+}
+.gallery-thumb:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .gallery-thumb:hover {
+    opacity: 0.85;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-arrow,
+  .gallery-thumb,
+  .gallery-thumb::after {
+    transition: none;
+  }
 }
 /* Each part is a heading with its content directly beneath, laid across the full width. */
 .case-block {
@@ -1398,14 +1520,9 @@ html:not(.js) .focus-detail {
   .case-learned {
     grid-template-columns: 1fr;
   }
-  /* Two phones to a row; a third and fourth start a second row. */
-  .case-media {
-    flex-wrap: wrap;
-    row-gap: 24px;
-  }
-  .case-media img {
-    flex-basis: 46%;
-    width: 46%;
+  /* On a phone the pictures swipe; the arrows would cover them. */
+  .gallery-arrow {
+    display: none;
   }
   .hero {
     min-height: 0;

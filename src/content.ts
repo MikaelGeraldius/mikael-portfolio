@@ -71,7 +71,7 @@ export const studied: StudyArea[] = [
     area: 'UI design',
     topics: 'Visual hierarchy, spacing grids, colour systems and theming, icon design, data visualisation, accessible interactive UI, app screens in Figma',
   },
-  { area: 'Game development', topics: 'Unity, C#, a canvas game loop in React, tile maps and collisions' },
+  { area: 'Game development', topics: 'Unity, C#, 2D pixel art in URP, draw order and depth sorting, balancing with a simulation, a canvas game loop in React, tile maps and collisions' },
   { area: 'AI assistants', topics: 'Claude, Claude Code, ChatGPT, Gemini, Hermes' },
 ]
 
@@ -89,7 +89,8 @@ export interface Project {
   does: string
   learned: string[]
   stack: string
-  repo: string
+  /** Public code, when there is some to show. */
+  repo?: string
   /** A live version to try, when there is one. */
   site?: string
   /** Who else built it and which part is Mikael's, for group work. */
@@ -138,6 +139,45 @@ export const projects: Project[] = [
       { src: shot('mood-classifier-results.webp'), alt: 'The results: 92.3% for the full model beside 91.3%, 83.5% and 38.3% for the page’s model and two baselines', width: 1440, height: 900 },
     ],
     shotsCaption: 'The live page: the opening, checking a song, and how often it is right.',
+  },
+  // A group game built from Kelompok01's design document (Nov 2026) by Alto Dev, Gerald Fedorian, Mikael and Nadine
+  // Kay Ludony, who made it together in Unity. The repository is private, so the page links no
+  // code; an itch.io page is planned. Facts come from the repo's Docs/GDD.md and Mikael's vault notes.
+  {
+    slug: 'oakhaven',
+    name: 'The Merchant of Oakhaven',
+    kind: 'Group project',
+    year: '2026',
+    platform: 'Windows',
+    meta: 'Group game · 2026 · Windows',
+    blurb: 'A pixel-art shop sim: five days to gather, craft and sell enough to repay the guild’s loan and earn a shop license.',
+    summary:
+      'A top-down pixel-art shop-management game in Unity. You open a shop in a forest village on a loan from the merchants’ guild, and have five days to repay it with a healthy profit margin and earn a permanent license.',
+    credit:
+      'Made from our group’s design document by Alto Dev, Gerald Fedorian, Mikael Geraldius Gunawan and Nadine Kay Ludony. We made the game in Unity together.',
+    does:
+      'Each day has three parts. In the morning you farm crops, chop timber and mine ore, craft tools at the forge, buy seeds and stock your stalls. In the afternoon the shop opens and its door locks until night, so buyers browse what you prepared while events break out: a noble who pays double, a bulk order with a deadline, rats eating the stock, a shoplifter and, on Hard, a candle fire. At night you pay rent and read the ledger, and on day five the guild master checks whether the loan is repaid and the margin met.',
+    learned: [
+      'A day that forces a plan: locking the shop door for the whole afternoon means gathering, crafting and stocking all happen in the morning, and the afternoon becomes a test of what you prepared.',
+      'Balancing with a simulation: a Python script plays the five days with different stock and prices, so the loan, rent and target margin can be tuned before anyone plays.',
+      'Difficulty is more than numbers: Relaxed, Standard and Hard change the starting money, the loan, rent and target margin, and also which afternoon events can happen, how often, and how long you have to react.',
+      'Draw order in a top-down world: characters and props sort by where they stand, so the player walks behind a tree and in front of a stall, and an editor tool checks the draw order around every prop.',
+      'Events that compete for attention: a noble waiting at the door, a rat at one stall and a thief loitering at another all want you at once, so each afternoon is a choice of what to save.',
+      'Music written as code: one shared melody arranged in Python, rendered with LMMS and a free SoundFont, and cut into loops that repeat with no gap, with event music taking over while rats or a thief are in the shop.',
+    ],
+    stack: 'Unity 6, C#, Universal Render Pipeline 2D, Unity Input System, Python, LMMS, ElevenLabs, Claude Code',
+    frame: 'screen',
+    // Captured by Mikael from the Windows build (v1.1, 17 Nov 2026) at 1920x1080, one Standard day in order.
+    shots: [
+      { src: shot('oakhaven-night.webp'), alt: 'Night in town: the merchant by a campfire outside the shop, fireflies in the dark', width: 1920, height: 1080 },
+      { src: shot('oakhaven-morning.webp'), alt: 'Morning on day 1: the merchant with a wooden axe by a campfire, between ore rocks and autumn trees, with the day, gold and loan in the corner', width: 1920, height: 1080 },
+      { src: shot('oakhaven-farm.webp'), alt: 'The farm: beds of beetroot and broccoli behind a wooden fence, with a stone well below', width: 1920, height: 1080 },
+      { src: shot('oakhaven-shop.webp'), alt: 'The shop in the afternoon: villagers browse the stalls, one says “Bought!”, and a tip warns that the wooden pickaxe sold out early, so charge more', width: 1920, height: 1080 },
+      { src: shot('oakhaven-bulk-order.webp'), alt: 'Day 2’s bulk order: a trader at the counter wants six carrots, with 39 seconds left on the countdown', width: 1920, height: 1080 },
+      { src: shot('oakhaven-ledger.webp'), alt: 'The day 1 ledger: 560 G in sales, 340 G profit after costs and rent, and a five-day outlook at a 59% margin against the 35% needed', width: 1920, height: 1080 },
+      { src: shot('oakhaven-license.webp'), alt: 'License granted after day 5: the 1,350 G loan repaid, 2,823 G in sales, 1,039 G profit and a 37% margin against the 35% needed', width: 1920, height: 1080 },
+    ],
+    shotsCaption: 'The Windows build: night in town, then one day in order, from gathering in the morning and the farm to selling in the afternoon, a bulk order, the ledger, and the license won on day five.',
   },
   // A team entry for the healthcare theme of the JOINTS UGM 2026 hackathon (submitted Oct 2026) by Alto Dev, Gerald
   // Fedorian, Mikael and Nadine Kay Ludony; all four designed and coded the app. Facts and numbers come from the repository's README and docs; the shots are
@@ -379,7 +419,7 @@ export const topicNodes: TopicNode[] = [
     group: 'other',
     kind: 'topic',
     parent: 'informatics',
-    text: 'Games, studied with Unity and C#. Wemen is a pixel-art life sim drawn on a canvas in React, with tile-map collisions and a snake mini game.',
+    text: 'Games, studied with Unity and C#. The Merchant of Oakhaven is a pixel-art shop sim my group made in Unity, balanced with a Python simulation; Wemen is a life sim drawn on a canvas in React, with tile-map collisions and a snake mini game.',
   },
   {
     id: 'audio',

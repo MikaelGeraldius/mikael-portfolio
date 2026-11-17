@@ -3,6 +3,7 @@ import { projects, type Project } from '../content'
 import { setSmoothScrollPaused, smoothScrollWithin } from '../hooks'
 import { closeProject, openProject, projectHref, useOpenProject } from '../route'
 import Arrow from './Arrow'
+import Gallery from './Gallery'
 
 /** Plain clicks are handled in place; a modified click keeps the browser's own behaviour. */
 const plain = (event: MouseEvent) =>
@@ -101,9 +102,11 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
               Try it live
             </a>
           ) : null}
-          <a className="case-bar-link" href={project.repo}>
-            Code on GitHub
-          </a>
+          {project.repo ? (
+            <a className="case-bar-link" href={project.repo}>
+              Code on GitHub
+            </a>
+          ) : null}
         </div>
       </div>
 
@@ -133,11 +136,7 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
         </header>
 
         <figure className="case-figure">
-          <div className="case-media" data-frame={project.frame}>
-            {project.shots.map((shot) => (
-              <img key={shot.src} src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} />
-            ))}
-          </div>
+          <Gallery project={project} open={open} />
           <figcaption className="small case-in" style={step(3)}>
             {project.shotsCaption}
           </figcaption>
@@ -187,9 +186,11 @@ function ProjectPage({ project, open, next }: { project: Project; open: boolean;
                 Try it live
               </a>
             ) : null}
-            <a className="contact-link" href={project.repo} aria-label={`${project.name} code on GitHub`}>
-              Code on GitHub
-            </a>
+            {project.repo ? (
+              <a className="contact-link" href={project.repo} aria-label={`${project.name} code on GitHub`}>
+                Code on GitHub
+              </a>
+            ) : null}
           </div>
           {next ? (
             <a
